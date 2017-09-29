@@ -16,13 +16,13 @@ public:
 	//Constructor
 	ArrayDinamico(int cantidadX,int cantidadY);
 	//Retornar Valor de la matriz
-	int ObtenerDistancia(int origen, int destino);//traer valor del array
+	int Get(int origen, int destino);//traer valor del array
 
 	//obtener los valores del listado para Y
-	T& GetListY(int origen) { return pT[origen]; }
+	T* GetListY(int origen) { return lstDistancia[origen]; }
 
 	//Asignar valor a la matriz
-	void AsignarDistancia(int origen, int destino, T valor);//asignar valor del array
+	void Set(int origen, int destino, T valor);//asignar valor del array
 
 	//Imprimir Matriz
 	void Imprimir(const char* formato);
@@ -53,13 +53,13 @@ ArrayDinamico<T>::ArrayDinamico(int cantidadX,int cantidadY)//se crea un array d
 }
 
 template <class T>
-int ArrayDinamico<T>::ObtenerDistancia(int origen, int destino)
+int ArrayDinamico<T>::Get(int origen, int destino)
 {
 	return this->lstDistancia[origen][destino];
 }
 
 template <class T>
-void ArrayDinamico<T>::AsignarDistancia(int x, int y, T valor)//asignar valor del array
+void ArrayDinamico<T>::Set(int x, int y, T valor)//asignar valor del array
 {
 	if(x>=this->lengthX || y>=this->lengthY)
 	{

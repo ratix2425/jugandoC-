@@ -9,14 +9,15 @@ public:
 	Tabla(void);
 	~Tabla();
 	//Inserta Nuevo Clase y retorna el indice donde se inserta el registro
-	int Insertar(T &row);
+	int Insertar(T &row);//Insertar por referencia
+	int Insertar(T *row);//Insertar por Puntero
 	void Remover(T *row);
 	void Remover(int nElem);
 	//traer objeto, con el indice
 	T *Get(int indice);
 private:
 	//Array de punteros
-	T **pT;
+	T **_pT;
 
 };
 
@@ -28,29 +29,36 @@ Tabla<T>::Tabla(void) {
 
 template <class T>
 Tabla<T>::~Tabla() {
-	delete[] pT;
+	delete[] _pT;
 }
 
 template <class T>
-int Tabla<T>::Insertar(T &row) {
+int Tabla<T>::Insertar(T &row) {//Referencia de Memoria
+	return this->Insertar(&row);//Inserto Con el puntero -> esta llamando a Tabla<T>::Insertar(T *row)
+}
+
+
+template <class T>
+int Tabla<T>::Insertar(T *row) {
 	
 	int indice = lenght;
 	T **newA= new T*[lenght+1];
 
 	for (int i = 0; i < lenght; i++)
 	{
-		newA[i]=pT[i];
+		newA[i]=_pT[i];
 	}
-	newA[indice]=&row;
+	newA[indice]=row;
 	lenght++;
 
-	delete[] pT;//borrar el array anterior
+	delete[] _pT;//borrar el array anterior
 
-	pT= newA;//Asignar nueva ubicacion de memoria de los Array
+	_pT= newA;//Asignar nueva ubicacion de memoria de los Array
 	newA = NULL;
 
 	return indice;
 }
+
 
 template <class T>
 void Tabla<T>::Remover(T *row){
@@ -68,6 +76,6 @@ T *Tabla<T>::Get(int indice) {
 		{
 			throw "está saliendo de los índices de la Tabla";
 		}
-		return &*pT[indice];
+		return &*_pT[indice];
 }
 #endif
