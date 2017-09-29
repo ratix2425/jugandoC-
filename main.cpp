@@ -9,41 +9,47 @@
 void main()
 {
 
-	//datos para llenar la tabla distancia
-	int distancia[]={0,10,5,9,8,7,
-		10,0,6,3,9,12,
-		5,6,0,2,4,8,
-		9,3,2,0,2,1,
-		8,9,4,2,0,10,
-		7,12,8,1,10,0};
-	//datos para llenar la tabla demanda
+	//datos para llenar la tabla distancia  (nodo x nodo)
+	int distancia[]={0,230,250,320,150,230,452,420,230,320,250,
+					 230,0,25,65,47,85,25,14,36,96,85,
+					 250,25,0,4,68,5,21,23,5,69,54,
+					 320,65,4,0,7,9,5,47,52,32,1,
+					 150,47,68,7,0,5,96,3,56,21,12,
+					 230,85,5,9,5,0,2,4,6,8,96,
+					 452,25,21,5,96,2,0,85,41,52,32,
+					 420,14,23,47,3,4,85,0,14,25,74,
+					 230,36,5,52,56,6,41,14,0,8,10,
+					 320,96,69,32,21,8,52,25,8,0,4,
+					 250,85,54,1,12,96,32,74,10,4,0
+					};
+	//datos para llenar la tabla demanda  = (nodo x dias)
 	int demanda[]=  {3,7,
-					8,4,
-					4,5,
-					10,10,
-					3,5,
-					4,6,
-					8,4,
-					3,7,
-					2,2,
-					1,4};
+					 8,4,
+					 4,5,
+					 10,10,
+					 3,5,
+					 4,6,
+					 8,4,
+					 3,7,
+					 2,2,
+					 1,4};
 
-	//datos para llenar la tabla capacidad
+	//datos para llenar la tabla capacidad (nodo)
 	int capacidad[]={10,
-					10,
-					10,
-					10,
-					10,
-					10,
-					10,
-					10,
-					10,
-					10};
+					 10,
+					 10,
+					 10,
+					 10,
+					 10,
+					 10,
+					 10,
+					 10,
+					 10};
 
 	//Contenedor de los datos
-	ArrayDinamico<int> lstDistancia(6,6);//Creamos una matriz distancia de 5 X 5
-	ArrayDinamico<int> lstDemanda(2,10);//Matriz de demanda 5 X 5
-	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,10);
+	ArrayDinamico<int> lstDistancia(11,11);//Creamos una matriz distancia de 11 x 11
+	ArrayDinamico<int> lstDemanda(2,10);//Matriz de demanda 2 x 10
+	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,10); // matriz de almacenamiento de 1 x 10
 
 
 	//Llenar Valores para la Distancia
