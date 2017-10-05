@@ -115,7 +115,13 @@ void main()
 				tmpInventarioAnterior = lstInventario.Get(x-1,y);
 			}
 			tmpDemanda = lstDemanda.Get(x,y);
-			tmpCantidadRecoger = random(tmpDemanda,capacidadVehiculo+tmpDemanda-tmpInventarioAnterior);//el valor minimo debe ser la demanda, no puede ser0, sino la operacion de abajo podria dar negativo
+			tmpCantidadRecoger = random(0,capacidadVehiculo-tmpInventarioAnterior);
+
+			//pensando en como controlar cuando el inventario anterior y la cantidad a recoger sea menor que la demanda, el valor da negativo, por ahora se coloca en 0
+			if(tmpInventarioAnterior+tmpCantidadRecoger<tmpDemanda)
+			{
+				tmpCantidadRecoger = tmpDemanda-tmpInventarioAnterior;
+			}
 
 			//Inventario = inventarioAnterior + cantidadRecoger - demanda
 			lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
