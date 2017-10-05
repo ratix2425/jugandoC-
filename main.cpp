@@ -1,13 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>//srand, rand
+#include <time.h>//time
 #include "Constantes.h"
 #include "ArrayDinamico.h"
 #include "Tabla.h"
 #include "Nodo.h"
 
 
+int random(int inicio, int final);
 
 void main()
 {
+	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
+
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
 	int distancia[]={0,230,250,320,150,230,452,420,230,320,250,
@@ -51,6 +56,10 @@ void main()
 	ArrayDinamico<int> lstDemanda(numeroDias,numeroNodos);//Matriz de demanda 2 x numero de Nodos
 	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,numeroNodos); // matriz de almacenamiento de 1 x numero de Nodos
 
+
+	ArrayDinamico<int> lstInventario(numeroDias,numeroNodos);
+
+
 	//Creacion de los Nodos
 	Tabla<Nodo> lstNodo;
 
@@ -84,12 +93,34 @@ void main()
 	{
 		for (int x = 0; x<lstCapacidadAlmacenamiento.lengthX; x++)
 		{
-
 			lstCapacidadAlmacenamiento.Set(x,y,capacidad[indice++]);
 		}
 	}
 
+	//Llenar Tabla Inventario
+	indice = 0;
 
+	int tmpInventarioAnterior;
+	int tmpDemanda;
+	int tmpCantidadRecoger;
+
+	//recorrer todos los nodos
+	for (int y = 0;y< lstInventario.lengthY ; y++)
+	{
+		for (int x = 0; x<lstInventario.lengthX; x++)
+		{
+			tmpInventarioAnterior = 0;
+			if(x>0)//si no es el primer dia, traer el inventario anterior
+			{
+				tmpInventarioAnterior = lstInventario.Get(x-1,y);
+			}
+			tmpDemanda = lstDemanda.Get(x,y);
+			tmpCantidadRecoger = random(tmpDemanda,capacidadVehiculo+tmpDemanda-tmpInventarioAnterior);//el valor minimo debe ser la demanda, no puede ser0, sino la operacion de abajo podria dar negativo
+
+			//Inventario = inventarioAnterior + cantidadRecoger - demanda
+			lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
+		}
+	}
 
 	//Insertar Nodos a la Tabla
 	for (int i = 1; i <= numeroNodos; i++)
@@ -98,6 +129,7 @@ void main()
 		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(i-1,0),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i));
 		lstNodo.Insertar(nodo);
 	}
+
 
 
 
@@ -118,13 +150,25 @@ void main()
 	printf("\nCapacidad Almacenamiento\n");
 	lstCapacidadAlmacenamiento.Imprimir("%d");
 
+	//imprimir Demanda
+	printf("\nInventario\n");
+	lstInventario.Imprimir("%d");
+
 	printf("\n\nMostrar Nodos\n");
 	for (int i = 0; i < lstNodo.lenght; i++)
 	{
 		lstNodo.Get(i)->Imprimir();
 	}
 
+
+
 	getchar();
 
 	return;
+}
+
+int random(int inicio, int final)
+{
+	
+	return rand()%(final-inicio+1)+inicio;
 }
