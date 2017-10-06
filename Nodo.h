@@ -14,7 +14,7 @@ public:
 
 	void Imprimir();
 
-
+	int *_distancia;
 private:
 	int _numeroNodo;
 
@@ -24,7 +24,7 @@ private:
 
 	int *_demanda;
 
-	int *_distancia;
+	
 };
 
 Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia)
@@ -76,6 +76,7 @@ void Nodo::Imprimir()
 	
 	printf("\n******************************************************************");
 	printf("\n\n");
+
 }
 
 

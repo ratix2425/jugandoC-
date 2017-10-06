@@ -53,9 +53,9 @@ ArrayDinamico<T>::ArrayDinamico(int cantidadX,int cantidadY)//se crea un array d
 }
 
 template <class T>
-int ArrayDinamico<T>::Get(int origen, int destino)
+int ArrayDinamico<T>::Get(int x, int y)
 {
-	return this->lstDistancia[origen][destino];
+	return this->lstDistancia[y][x];
 }
 
 template <class T>
