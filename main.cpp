@@ -116,29 +116,20 @@ void main()
 			}
 			tmpDemanda = lstDemanda.Get(x,y);
 
-			/*if(tmpInventarioAnterior==0)//si es 0 , la cantidad a recoger debe ser mayor a la demanda, pero no menor a la capacidad de vehiculo
+
+			//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
+			int diferencia =tmpInventarioAnterior- tmpDemanda;
+			if(diferencia>=0)//si la diferencia en positiva, el valor puede ser entre 0 y capacidad de vehiculo - diferencia
 			{
-				tmpCantidadRecoger = random(tmpDemanda,capacidadVehiculo-tmpDemanda+1);
+				tmpCantidadRecoger =random(0,capacidadVehiculo-diferencia);
 			}
 			else
 			{
-				if(tmpInventarioAnterior<=tmpDemanda)//si es menor a la demanda, la cantidad a recoger debe ser menor o igual a la demanda
-				{
-					tmpCantidadRecoger = random(0,tmpDemanda);
-				}
-				else
-				{
-					tmpCantidadRecoger=0;//en cualquier otro caso la cantidad a recoger debe ser 0
-				}
-			}*/
+				//si la diferencia es negativa, el valor del cr debe ser entre el valor que falta para que pueda dar 0 (diferencia positivo) y la (capacidad del vehiculo + diferencia)
+				//corremos los valores negativos hacia la derecha para que pueda dar 0 o 15 la operacion 
 
-			tmpCantidadRecoger = random(0,capacidadVehiculo-tmpInventarioAnterior);
-
-
-			//pensando en como controlar cuando el inventario anterior y la cantidad a recoger sea menor que la demanda, el valor da negativo, por ahora se coloca en 0
-			if(tmpInventarioAnterior+tmpCantidadRecoger<tmpDemanda)
-			{
-			tmpCantidadRecoger = tmpDemanda-tmpInventarioAnterior;
+				diferencia*=-1;
+				tmpCantidadRecoger = random(diferencia,capacidadVehiculo+diferencia);
 			}
 
 			//Inventario = inventarioAnterior + cantidadRecoger - demanda
