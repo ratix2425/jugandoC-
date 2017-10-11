@@ -130,7 +130,8 @@ int main()
 			int diferencia =tmpInventarioAnterior- tmpDemanda;
 			if(diferencia>=0)//si la diferencia en positiva,es por que la capacidad de inventario, suple la capacidad de demanda
 			{
-				tmpCantidadRecoger =random(0,mayor);
+				//no necesitamos evaluar, ya que el inventario disponible, tiene la cantidad necesaria
+				tmpCantidadRecoger =0;//random(0,mayor);
 			}
 			else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
 			{
