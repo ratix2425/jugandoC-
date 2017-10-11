@@ -117,22 +117,35 @@ int main()
 			tmpDemanda = lstDemanda.Get(x,y);
 
 
+			//con esto evaluamos, si el rango maximo para CR es la capacidad disponible o la capacidad del vehiculo
+			int disponibleInventario = lstCapacidadAlmacenamiento.Get(0,y)-tmpInventarioAnterior;
+			int mayor = capacidadVehiculo;
+			if(disponibleInventario<capacidadVehiculo)
+			{
+				mayor=disponibleInventario;
+			}
+
+
 			//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
 			int diferencia =tmpInventarioAnterior- tmpDemanda;
-			if(diferencia>=0)//si la diferencia en positiva, CR es un numero entre 0 y capacidad de vehiculo - diferencia
+			if(diferencia>=0)//si la diferencia en positiva,es por que la capacidad de inventario, suple la capacidad de demanda
 			{
-				tmpCantidadRecoger =random(0,capacidadVehiculo-diferencia);
+				tmpCantidadRecoger =random(0,mayor);
 			}
 			else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
 			{
 				diferencia*=-1;
-				if(diferencia<=capacidadVehiculo)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
+
+
+
+
+				if(diferencia<=mayor)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
 				{
-					tmpCantidadRecoger = random(diferencia,capacidadVehiculo);
+					tmpCantidadRecoger = random(diferencia,mayor);
 				}
 				else//si la diferencia es mayor a la capacidad del vehiculo, CR es un numero entre 0 y capacidad del vehiculo
 				{
-					tmpCantidadRecoger =random(0,capacidadVehiculo);
+					tmpCantidadRecoger =random(0,mayor);
 				}
 			}
 
