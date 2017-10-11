@@ -9,9 +9,9 @@
 
 int random(int inicio, int final);
 
-int main()
+void main()
 {
-	srand (time(NULL));//la semilla para generar los nÃºmeros aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
+	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
@@ -93,7 +93,7 @@ int main()
 	{
 		for (int x = 0; x<lstCapacidadAlmacenamiento.lengthX; x++)
 		{
-			lstCapacidadAlmacenamiento.Set(x,y,capacidad[indice++]);
+			lstCapacidadAlmacenamiento.Set(x,y,capacidad[y]);
 		}
 	}
 
@@ -119,18 +119,24 @@ int main()
 
 			//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
 			int diferencia =tmpInventarioAnterior- tmpDemanda;
-			if(diferencia>=0)//si la diferencia en positiva, el valor puede ser entre 0 y capacidad de vehiculo - diferencia
+			if(diferencia>=0)//si la diferencia en positiva, CR es un numero entre 0 y capacidad de vehiculo - diferencia
 			{
 				tmpCantidadRecoger =random(0,capacidadVehiculo-diferencia);
 			}
-			else
+			else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
 			{
-				//si la diferencia es negativa, el valor del cr debe ser entre el valor que falta para que pueda dar 0 (diferencia positivo) y la (capacidad del vehiculo + diferencia)
-				//corremos los valores negativos hacia la derecha para que pueda dar 0 o 15 la operacion 
-
 				diferencia*=-1;
-				tmpCantidadRecoger = random(diferencia,capacidadVehiculo+diferencia);
+				if(diferencia<=capacidadVehiculo)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
+				{
+					tmpCantidadRecoger = random(diferencia,capacidadVehiculo);
+				}
+				else//si la diferencia es mayor a la capacidad del vehiculo, CR es un numero entre 0 y capacidad del vehiculo
+				{
+					tmpCantidadRecoger =random(0,capacidadVehiculo);
+				}
 			}
+
+			//printf("cantidad a recoger = %d\n",tmpCantidadRecoger);
 
 			//Inventario = inventarioAnterior + cantidadRecoger - demanda
 			lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
@@ -141,7 +147,7 @@ int main()
 	for (int i = 1; i <= numeroNodos; i++)
 	{
 		//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
-		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(i-1,0),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i));
+		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i));
 		lstNodo.Insertar(nodo);
 	}
 
@@ -179,7 +185,7 @@ int main()
 
 	getchar();
 
-	return 0;
+	return;
 }
 
 int random(int inicio, int final)
