@@ -9,7 +9,7 @@
 
 int random(int inicio, int final);
 
-void main()
+int main()
 {
 	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
@@ -185,7 +185,7 @@ void main()
 
 	getchar();
 
-	return;
+	return 0;
 }
 
 int random(int inicio, int final)
