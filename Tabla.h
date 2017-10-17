@@ -18,7 +18,7 @@ public:
 	T *Get(int indice);
 
 	//al hacer un =, no llevarse la memoria, sino que copie los registros
-	Tabla<T> &operator=(const Tabla<T> &c);
+	//Tabla<T> &operator=(Tabla<T> &c);
 private:
 	//Array de punteros
 	T **_pT;
@@ -115,23 +115,23 @@ T *Tabla<T>::Get(int indice) {
 	return &*_pT[indice];
 }
 
-
+/*
 template <class T>
-Tabla<T> &Tabla<T>::operator=(const Tabla<T> &c) {
+Tabla<T> &Tabla<T>::operator=(Tabla<T> &c) {
 	if(this != &c) {
 		delete[] _pT;
 		lenght=0;
 		if(c._pT) {
-			lenght=&c->lenght;
-			_pT= new T*[&c->lenght];
+			lenght=c.lenght;
+			_pT= new T*[c.lenght];
 
 			for (int i = 0; i < lenght; i++)
 			{
-				_pT[i]=&c->Get(i);
+				_pT[i]=c.Get(i);
 			}
 		}
 		else _pT = NULL;
 	}
 	return *this;
-}
+}*/
 #endif

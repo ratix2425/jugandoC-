@@ -23,6 +23,7 @@ public:
 	int TotalDemanda();
 
 	void Imprimir();
+
 };
 
 Ruta::Ruta(int numeroRuta, int nDia)
@@ -50,7 +51,7 @@ int Ruta::TotalDemanda()
 void Ruta::Imprimir()
 {
 	printf("\nN ruta %d",this->_numeroRuta);
-	printf("\tdia %d",this->_nDia);
+	printf("\tdia %d",this->_nDia+1);
 	printf("\tNodos:");
 	for(int i=0;i<this->nodos.lenght;i++)
 	{
@@ -58,5 +59,44 @@ void Ruta::Imprimir()
 	}
 	printf("\tTotal Carga: %d", this->TotalDemanda());
 
+};
+
+
+
+void GenerarRuta(Tabla<Ruta> &lstRutatmp,Tabla<Nodo> &lstNodo)
+{
+	for(int dia =0;dia<numeroDias;dia++)
+	{
+		Tabla<Nodo> lstTmpNodo;
+		lstTmpNodo.Insertar(lstNodo);
+
+		int numeroRuta=0;
+
+		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
+		lstRutatmp.Insertar(rut);
+		do
+		{
+			int indice = random(0,lstTmpNodo.lenght-1);//obtener un nodo al azar
+			if(
+				rut->TotalDemanda()+lstTmpNodo.Get(indice)->GetDemanda(dia)<=capacidadVehiculo//si la total de la demanda de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
+				&& rut->nodos.lenght<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
+				)
+			{
+				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+			}
+			else
+			{
+				//creamos nueva Ruta
+				rut = new Ruta(++numeroRuta,dia);
+				//insertar al listado de rutas
+				lstRutatmp.Insertar(rut);
+				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+			}
+		}
+		while(lstTmpNodo.lenght>0);//se debe repetir, hasta que no queden nodos sin rutas
+	}
 }
+
 #endif

@@ -57,7 +57,7 @@ int main()
 	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,numeroNodos); // matriz de almacenamiento de 1 x numero de Nodos
 
 
-	ArrayDinamico<int> lstInventario(numeroDias,numeroNodos);
+	ArrayDinamico<int> lstInventario(numeroDias,numeroNodos);//
 
 
 	//Creacion de los Nodos
@@ -125,7 +125,6 @@ int main()
 				mayor=disponibleInventario;
 			}
 
-
 			//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
 			int diferencia =tmpInventarioAnterior- tmpDemanda;
 			if(diferencia>=0)//si la diferencia en positiva,es por que la capacidad de inventario, suple la capacidad de demanda
@@ -136,9 +135,6 @@ int main()
 			else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
 			{
 				diferencia*=-1;
-
-
-
 
 				if(diferencia<=mayor)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
 				{
@@ -166,41 +162,17 @@ int main()
 	}
 
 
-
 	//Crear las Rutas
-	Tabla<Ruta> lstRuta;
+	Tabla<Ruta> lstRuta;//Declarar variable, donde va a quedar el listao de Rutas
+	GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
-	for(int dia =0;dia<numeroDias;dia++)
-	{
 
-		Tabla<Nodo> lstTmpNodo;
-		lstTmpNodo.Insertar(lstNodo);
 
-		int numeroRuta=0;
-
-		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
-		lstRuta.Insertar(rut);
-		do
-		{
-			int indice = random(0,lstTmpNodo.lenght-1);//obtener un nodo al azar
-			if(rut->TotalDemanda()+lstTmpNodo.Get(indice)->GetDemanda(dia)<=capacidadVehiculo)//si la total de la demanda de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
-			{
-				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
-				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
-			}
-			else
-			{
-				//creamos nueva Ruta
-				rut = new Ruta(++numeroRuta,dia);
-				//insertar al listado de rutas
-				lstRuta.Insertar(rut);
-				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
-				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
-			}
-		}
-		while(lstTmpNodo.lenght>0);//se debe repetir, hasta que no queden nodos sin rutas
-	}
-
+	/***************************************************************
+	*
+	*	mostrar Mensajes
+	*
+	****************************************************************/
 
 	printf("\nCapacidad de Vehiculo : %d\n", capacidadVehiculo);
 	printf("\nN de Nodos : %d\n", numeroNodos);
@@ -246,8 +218,3 @@ int main()
 	return 0;
 }
 
-int random(int inicio, int final)
-{
-
-	return rand()%(final-inicio+1)+inicio;
-}
