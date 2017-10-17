@@ -14,7 +14,11 @@ public:
 
 	void Imprimir();
 
+	int NumeroNodo();
+
 	int *_distancia;
+
+	int GetDemanda(int nDia);
 private:
 	int _numeroNodo;
 
@@ -24,7 +28,7 @@ private:
 
 	int *_demanda;
 
-	
+
 };
 
 Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia)
@@ -37,11 +41,10 @@ Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distanci
 
 }
 
-
 Nodo::~Nodo(void)
 {
-	//if(this->lstDemanda)
-	//delete[] this->lstDemanda;
+	if(this->_demanda)
+		delete[] this->_demanda;
 }
 
 void Nodo::Imprimir()
@@ -58,7 +61,7 @@ void Nodo::Imprimir()
 	printf("\n\t");
 	for (int i = 0; i < numeroDias; i++)
 	{
-		printf("\t%d",this->_demanda[i]);
+		printf("\t%d",this->_demanda[i]);	
 	}
 	printf("\n");
 
@@ -73,12 +76,21 @@ void Nodo::Imprimir()
 	{
 		printf("%d\t",this->_distancia[i]);
 	}
-	
+
 	printf("\n******************************************************************");
 	printf("\n\n");
 
 }
 
+int Nodo::NumeroNodo()
+{
+	return this->_numeroNodo;
+}
 
+
+int Nodo::GetDemanda(int nDia)
+{
+	return this->_demanda[nDia];
+}
 
 #endif

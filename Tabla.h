@@ -11,10 +11,14 @@ public:
 	//Inserta Nuevo Clase y retorna el indice donde se inserta el registro
 	int Insertar(T &row);//Insertar por referencia
 	int Insertar(T *row);//Insertar por Puntero
+	int Insertar(Tabla<T> &c);
 	void Remover(T *row);
 	void Remover(int nElem);
 	//traer objeto, con el indice
 	T *Get(int indice);
+
+	//al hacer un =, no llevarse la memoria, sino que copie los registros
+	Tabla<T> &operator=(const Tabla<T> &c);
 private:
 	//Array de punteros
 	T **_pT;
@@ -40,7 +44,7 @@ int Tabla<T>::Insertar(T &row) {//Referencia de Memoria
 
 template <class T>
 int Tabla<T>::Insertar(T *row) {
-	
+
 	int indice = lenght;
 	T **newA= new T*[lenght+1];
 
@@ -59,23 +63,75 @@ int Tabla<T>::Insertar(T *row) {
 	return indice;
 }
 
+template <class T>
+int Tabla<T>::Insertar(Tabla<T> &c) {
+	int indice = lenght;
+	if(this != &c) {
+		if(c._pT) {
+			//this->lenght=this->lenght+&c->lenght;
+			//_pT= new T*[&c->lenght];
+
+			for (int i = 0; i < c.lenght; i++)
+			{
+				this->Insertar(*c.Get(i));
+			}
+		}
+		else _pT = NULL;
+	}
+	return indice;
+}
 
 template <class T>
 void Tabla<T>::Remover(T *row){
+	T **newA= new T*[lenght-1];
 
+
+	for (int i = 0,x=0; i < lenght; i++)
+	{
+		if(_pT[i]!=row)
+		{
+			newA[x++]=_pT[i];
+		}
+	}
+	lenght--;
+
+	delete[] _pT;//borrar el array anterior
+
+	_pT= newA;//Asignar nueva ubicacion de memoria de los Array
+	newA = NULL;
 }
 
 template <class T>
 void Tabla<T>::Remover(int nElem) {
-	
+	this->Remover(this->Get(nElem));
 }
 
 template <class T>
 T *Tabla<T>::Get(int indice) { 
-		if(indice>=lenght || indice<0)
-		{
-			throw "está saliendo de los índices de la Tabla";
+	if(indice>=lenght || indice<0)
+	{
+		throw "está saliendo de los índices de la Tabla";
+	}
+	return &*_pT[indice];
+}
+
+
+template <class T>
+Tabla<T> &Tabla<T>::operator=(const Tabla<T> &c) {
+	if(this != &c) {
+		delete[] _pT;
+		lenght=0;
+		if(c._pT) {
+			lenght=&c->lenght;
+			_pT= new T*[&c->lenght];
+
+			for (int i = 0; i < lenght; i++)
+			{
+				_pT[i]=&c->Get(i);
+			}
 		}
-		return &*_pT[indice];
+		else _pT = NULL;
+	}
+	return *this;
 }
 #endif

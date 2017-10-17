@@ -5,7 +5,7 @@
 #include "ArrayDinamico.h"
 #include "Tabla.h"
 #include "Nodo.h"
-
+#include "Ruta.h"
 
 int random(int inicio, int final);
 
@@ -167,6 +167,40 @@ int main()
 
 
 
+	//Crear las Rutas
+	Tabla<Ruta> lstRuta;
+
+	for(int dia =0;dia<numeroDias;dia++)
+	{
+
+		Tabla<Nodo> lstTmpNodo;
+		lstTmpNodo.Insertar(lstNodo);
+
+		int numeroRuta=0;
+
+		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
+		lstRuta.Insertar(rut);
+		do
+		{
+			int indice = random(0,lstTmpNodo.lenght-1);//obtener un nodo al azar
+			if(rut->TotalDemanda()+lstTmpNodo.Get(indice)->GetDemanda(dia)<=capacidadVehiculo)//si la total de la demanda de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
+			{
+				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+			}
+			else
+			{
+				//creamos nueva Ruta
+				rut = new Ruta(++numeroRuta,dia);
+				//insertar al listado de rutas
+				lstRuta.Insertar(rut);
+				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+			}
+		}
+		while(lstTmpNodo.lenght>0);//se debe repetir, hasta que no queden nodos sin rutas
+	}
+
 
 	printf("\nCapacidad de Vehiculo : %d\n", capacidadVehiculo);
 	printf("\nN de Nodos : %d\n", numeroNodos);
@@ -195,7 +229,17 @@ int main()
 		lstNodo.Get(i)->Imprimir();
 	}
 
+	printf("\n\nMostrar Rutas\n");
+	for (int i = 0; i < lstRuta.lenght; i++)
+	{
+		//Separar las rutas, de distintos dias
+		if(i>0 && lstRuta.Get(i-1)->GetDia()!=lstRuta.Get(i)->GetDia())
+		{
+			printf("\n");
+		}
 
+		lstRuta.Get(i)->Imprimir();
+	}
 
 	getchar();
 
