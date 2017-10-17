@@ -52,19 +52,21 @@ void Ruta::Imprimir()
 {
 	printf("\nN ruta %d",this->_numeroRuta);
 	printf("\tdia %d",this->_nDia+1);
-	printf("\tNodos:");
+	printf("\tTotal Carga: %d", this->TotalDemanda());
+	printf("\tNodos: ");
 	for(int i=0;i<this->nodos.lenght;i++)
 	{
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
-	printf("\tTotal Carga: %d", this->TotalDemanda());
+	
 
 };
 
 
 
-void GenerarRuta(Tabla<Ruta> &lstRutatmp,Tabla<Nodo> &lstNodo)
+Tabla<Ruta> *GenerarRuta(Tabla<Nodo> &lstNodo)
 {
+	Tabla<Ruta> *lstRutatmp = new Tabla<Ruta>();
 	for(int dia =0;dia<numeroDias;dia++)
 	{
 		Tabla<Nodo> lstTmpNodo;
@@ -73,7 +75,7 @@ void GenerarRuta(Tabla<Ruta> &lstRutatmp,Tabla<Nodo> &lstNodo)
 		int numeroRuta=0;
 
 		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
-		lstRutatmp.Insertar(rut);
+		lstRutatmp->Insertar(rut);
 		do
 		{
 			int indice = random(0,lstTmpNodo.lenght-1);//obtener un nodo al azar
@@ -90,13 +92,14 @@ void GenerarRuta(Tabla<Ruta> &lstRutatmp,Tabla<Nodo> &lstNodo)
 				//creamos nueva Ruta
 				rut = new Ruta(++numeroRuta,dia);
 				//insertar al listado de rutas
-				lstRutatmp.Insertar(rut);
+				lstRutatmp->Insertar(rut);
 				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
 				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
 			}
 		}
 		while(lstTmpNodo.lenght>0);//se debe repetir, hasta que no queden nodos sin rutas
 	}
+	return lstRutatmp;
 }
 
 #endif

@@ -163,8 +163,8 @@ int main()
 
 
 	//Crear las Rutas
-	Tabla<Ruta> lstRuta;//Declarar variable, donde va a quedar el listao de Rutas
-	GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
+	Tabla<Ruta> lstRuta = GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listao de Rutas
+	//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
 
 
@@ -202,15 +202,15 @@ int main()
 	}
 
 	printf("\n\nMostrar Rutas\n");
-	for (int i = 0; i < lstRuta.lenght; i++)
+	for (int i = 0; i < lstRuta->lenght; i++)
 	{
 		//Separar las rutas, de distintos dias
-		if(i>0 && lstRuta.Get(i-1)->GetDia()!=lstRuta.Get(i)->GetDia())
+		if(i>0 && lstRuta->Get(i-1)->GetDia()!=lstRuta->Get(i)->GetDia())
 		{
 			printf("\n");
 		}
 
-		lstRuta.Get(i)->Imprimir();
+		lstRuta->Get(i)->Imprimir();
 	}
 
 	getchar();
