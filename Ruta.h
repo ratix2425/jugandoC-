@@ -24,6 +24,8 @@ public:
 
 	void Imprimir();
 
+	static Tabla<Ruta> *GenerarRuta(Tabla<Nodo> &lstNodo);
+
 };
 
 Ruta::Ruta(int numeroRuta, int nDia)
@@ -64,7 +66,7 @@ void Ruta::Imprimir()
 
 
 
-Tabla<Ruta> *GenerarRuta(Tabla<Nodo> &lstNodo)
+Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 {
 	Tabla<Ruta> *lstRutatmp = new Tabla<Ruta>();
 	for(int dia =0;dia<numeroDias;dia++)

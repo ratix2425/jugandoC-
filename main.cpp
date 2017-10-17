@@ -11,7 +11,7 @@ int random(int inicio, int final);
 
 int main()
 {
-	srand (time(NULL));//la semilla para generar los nÃºmeros aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
+	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
@@ -163,7 +163,7 @@ int main()
 
 
 	//Crear las Rutas
-	Tabla<Ruta> *lstRuta = GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listao de Rutas
+	Tabla<Ruta> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listao de Rutas
 	//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
 
