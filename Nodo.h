@@ -6,6 +6,17 @@
 
 class Nodo
 {
+private:
+	int *_distancia;
+
+	int _numeroNodo;
+
+	int _capacidad;
+
+	int _indiceArray;
+
+	int *_demanda;
+
 public:
 
 	Nodo(int numeroNodo, int capacidad, int indice,int *demanda,int *distancia);
@@ -15,20 +26,8 @@ public:
 	void Imprimir();
 
 	int NumeroNodo();
-
-	int *_distancia;
-
+	
 	int GetDemanda(int nDia);
-private:
-	int _numeroNodo;
-
-	int _capacidad;
-
-	int _indiceArray;
-
-	int *_demanda;
-
-
 };
 
 Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia)
@@ -86,7 +85,6 @@ int Nodo::NumeroNodo()
 {
 	return this->_numeroNodo;
 }
-
 
 int Nodo::GetDemanda(int nDia)
 {

@@ -8,11 +8,16 @@ class ArrayDinamico
 private:
 
 	T **lstDistancia;//puntero donde va a quedar almacenado el array de las distancias
+	
+	int lengthX;//tamaño del array
 
+	int lengthY;
 public:
 
-	int lengthX;//tamaño del array
-	int lengthY;
+	int GetLengthX(){return this->lengthX;}
+
+	int GetLengthY(){return this->lengthY;}
+
 	//Constructor
 	ArrayDinamico(int cantidadX,int cantidadY);
 	//Retornar Valor de la matriz

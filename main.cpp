@@ -66,9 +66,9 @@ int main()
 	//Llenar Valores para la Distancia
 	//asignar los valores 
 	int indice=0;
-	for (int y = 0; y<lstDistancia.lengthY; y++)
+	for (int y = 0; y<lstDistancia.GetLengthY(); y++)
 	{
-		for (int x = 0; x<lstDistancia.lengthX; x++)
+		for (int x = 0; x<lstDistancia.GetLengthX(); x++)
 		{
 
 			lstDistancia.Set(x,y,distancia[indice++]);
@@ -78,9 +78,9 @@ int main()
 	//Llenar Valores para la demanda
 	//asignar los valores 
 	indice=0;
-	for (int y = 0; y<lstDemanda.lengthY; y++)
+	for (int y = 0; y<lstDemanda.GetLengthY(); y++)
 	{
-		for (int x = 0; x<lstDemanda.lengthX;  x++)
+		for (int x = 0; x<lstDemanda.GetLengthX();  x++)
 		{
 			lstDemanda.Set(x,y,demanda[indice++]);
 		}
@@ -89,9 +89,9 @@ int main()
 	//Llenar Valores para la capacidad
 	//asignar los valores 
 	indice = 0;
-	for (int y = 0;y< lstCapacidadAlmacenamiento.lengthY ; y++)
+	for (int y = 0;y< lstCapacidadAlmacenamiento.GetLengthY(); y++)
 	{
-		for (int x = 0; x<lstCapacidadAlmacenamiento.lengthX; x++)
+		for (int x = 0; x<lstCapacidadAlmacenamiento.GetLengthX(); x++)
 		{
 			lstCapacidadAlmacenamiento.Set(x,y,capacidad[y]);
 		}
@@ -105,9 +105,9 @@ int main()
 	int tmpCantidadRecoger;
 
 	//recorrer todos los nodos
-	for (int y = 0;y< lstInventario.lengthY ; y++)
+	for (int y = 0;y< lstInventario.GetLengthY() ; y++)
 	{
-		for (int x = 0; x<lstInventario.lengthX; x++)
+		for (int x = 0; x<lstInventario.GetLengthX(); x++)
 		{
 			tmpInventarioAnterior = 0;
 			if(x>0)//si no es el primer dia, traer el inventario anterior
@@ -196,13 +196,13 @@ int main()
 	lstInventario.Imprimir("%d");
 
 	printf("\n\nMostrar Nodos\n");
-	for (int i = 0; i < lstNodo.lenght; i++)
+	for (int i = 0; i < lstNodo.GetLength(); i++)
 	{
 		lstNodo.Get(i)->Imprimir();
 	}
 
 	printf("\n\nMostrar Rutas\n");
-	for (int i = 0; i < lstRuta->lenght; i++)
+	for (int i = 0; i < lstRuta->GetLength(); i++)
 	{
 		//Separar las rutas, de distintos dias
 		if(i>0 && lstRuta->Get(i-1)->GetDia()!=lstRuta->Get(i)->GetDia())

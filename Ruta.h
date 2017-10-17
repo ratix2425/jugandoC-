@@ -43,7 +43,7 @@ int Ruta::TotalDemanda()
 {
 	int total = 0;
 
-	for(int i=0;i<nodos.lenght;i++)
+	for(int i=0;i<nodos.GetLength();i++)
 	{
 		total = total+nodos.Get(i)->GetDemanda(_nDia);
 	}
@@ -56,7 +56,7 @@ void Ruta::Imprimir()
 	printf("\tdia %d",this->_nDia+1);
 	printf("\tTotal Carga: %d", this->TotalDemanda());
 	printf("\tNodos: ");
-	for(int i=0;i<this->nodos.lenght;i++)
+	for(int i=0;i<this->nodos.GetLength();i++)
 	{
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
@@ -80,10 +80,10 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 		lstRutatmp->Insertar(rut);
 		do
 		{
-			int indice = random(0,lstTmpNodo.lenght-1);//obtener un nodo al azar
+			int indice = random(0,lstTmpNodo.GetLength()-1);//obtener un nodo al azar
 			if(
 				rut->TotalDemanda()+lstTmpNodo.Get(indice)->GetDemanda(dia)<=capacidadVehiculo//si la total de la demanda de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
-				&& rut->nodos.lenght<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
+				&& rut->nodos.GetLength()<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
 				)
 			{
 				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
@@ -99,7 +99,7 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
 			}
 		}
-		while(lstTmpNodo.lenght>0);//se debe repetir, hasta que no queden nodos sin rutas
+		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
 	}
 	return lstRutatmp;
 }

@@ -3,9 +3,12 @@
 
 template <class T>
 class Tabla {
-public:
+private:
 	int lenght;
+	//Array de punteros
+	T **_pT;
 
+public:
 	Tabla(void);
 	~Tabla();
 	//Inserta Nuevo Clase y retorna el indice donde se inserta el registro
@@ -14,15 +17,13 @@ public:
 	int Insertar(Tabla<T> &c);
 	void Remover(T *row);
 	void Remover(int nElem);
+
+	int GetLength(){ return this->lenght;}
 	//traer objeto, con el indice
 	T *Get(int indice);
 
 	//al hacer un =, no llevarse la memoria, sino que copie los registros
 	//Tabla<T> &operator=(Tabla<T> &c);
-private:
-	//Array de punteros
-	T **_pT;
-
 };
 
 // Definición:
@@ -118,20 +119,20 @@ T *Tabla<T>::Get(int indice) {
 /*
 template <class T>
 Tabla<T> &Tabla<T>::operator=(Tabla<T> &c) {
-	if(this != &c) {
-		delete[] _pT;
-		lenght=0;
-		if(c._pT) {
-			lenght=c.lenght;
-			_pT= new T*[c.lenght];
+if(this != &c) {
+delete[] _pT;
+lenght=0;
+if(c._pT) {
+lenght=c.lenght;
+_pT= new T*[c.lenght];
 
-			for (int i = 0; i < lenght; i++)
-			{
-				_pT[i]=c.Get(i);
-			}
-		}
-		else _pT = NULL;
-	}
-	return *this;
+for (int i = 0; i < lenght; i++)
+{
+_pT[i]=c.Get(i);
+}
+}
+else _pT = NULL;
+}
+return *this;
 }*/
 #endif
