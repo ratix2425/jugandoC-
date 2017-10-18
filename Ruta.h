@@ -60,7 +60,7 @@ void Ruta::Imprimir()
 	{
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
-	
+
 
 };
 
@@ -91,12 +91,34 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 			}
 			else
 			{
-				//creamos nueva Ruta
-				rut = new Ruta(++numeroRuta,dia);
-				//insertar al listado de rutas
-				lstRutatmp->Insertar(rut);
-				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
-				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+				//si hay un nodo que puede agregar a la ruta existente, se adiciona y no se crea nueva ruta
+				bool existe = false;
+				if(rut->nodos.GetLength()<maxNodoRuta)
+				{
+					for (int i = 0; i < lstRutatmp->GetLength(); i++)
+					{
+						if(lstRutatmp->Get(i)->GetDia()==dia)//OJO: para poder agregar el nodo a la ruta, deben ser del mismo dia
+						{
+							if(lstRutatmp->Get(i)->TotalDemanda()+ lstTmpNodo.Get(indice)->GetDemanda(dia)<=capacidadVehiculo)
+							{
+								lstRutatmp->Get(i)->nodos.Insertar(lstTmpNodo.Get(indice));
+								lstTmpNodo.Remover(lstTmpNodo.Get(indice));
+								existe = true;
+								break;
+							}
+						}
+					}
+				}
+
+				if(!existe)//si no se encontro una ruta, para agregarlo, se adiciona una nueva
+				{
+					//creamos nueva Ruta
+					rut = new Ruta(++numeroRuta,dia);
+					//insertar al listado de rutas
+					lstRutatmp->Insertar(rut);
+					rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+					lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+				}
 			}
 		}
 		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas

@@ -177,6 +177,7 @@ int main()
 	printf("\nCapacidad de Vehiculo : %d\n", capacidadVehiculo);
 	printf("\nN de Nodos : %d\n", numeroNodos);
 	printf("\nN de Dias : %d\n", numeroDias);
+	printf("\nMaximo Nodos por Rutas : %d\n", maxNodoRuta);
 
 	//imprimir
 	printf("\n\ndistancia\n");
