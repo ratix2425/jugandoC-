@@ -24,9 +24,11 @@ public:
 
 	int TotalCantidadRecoger();
 
+	int TotalDistancia();
+
 	void Imprimir();
 
-	static Tabla<Ruta> *GenerarRuta(Tabla<Nodo> &lstNodo);
+	static Tabla<Tabla<Ruta>> *GenerarRuta(Tabla<Nodo> &lstNodo);
 
 };
 
@@ -52,6 +54,17 @@ int Ruta::TotalDemanda()
 	return total;
 }
 
+int Ruta::TotalDistancia()
+{
+	int total = 0;
+
+	for(int i=0;i<nodos.GetLength();i++)
+	{
+		total = total+nodos.Get(i)->GetDistancia(_nDia);
+	}
+	return total;
+}
+
 int Ruta::TotalCantidadRecoger()
 {
 	int total = 0;
@@ -69,24 +82,26 @@ void Ruta::Imprimir()
 	printf("\tdia %d",this->_nDia+1);
 	printf("\tTC: %d", this->TotalDemanda());
 	printf("\tTCR: %d", this->TotalCantidadRecoger());
+	printf("\tTD: %d", this->TotalDistancia());
 	printf("\tNodos: ");
 	for(int i=0;i<this->nodos.GetLength();i++)
 	{
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
-
-
-
-
 };
 
 
 
-Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
+Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 {
-	Tabla<Ruta> *lstRutatmp = new Tabla<Ruta>();//puntero temporal donde se va a almacenar todas las rutas
+	Tabla<Tabla<Ruta>> *lstRutatmpGeneral = new Tabla<Tabla<Ruta>>();//un listado de tabla de rutas, por dias
+	Tabla<Ruta> *lstRutatmp;//puntero temporal donde se va a almacenar todas las rutas por dias
+
 	for(int dia =0;dia<numeroDias;dia++)//recorrer todos los dias
 	{
+		lstRutatmp = new Tabla<Ruta>();//puntero temporal donde se va a almacenar todas las rutas
+
+		lstRutatmpGeneral->Insertar(lstRutatmp);
 		Tabla<Nodo> lstTmpNodo;
 		lstTmpNodo.Insertar(lstNodo);//guardamos todos los nodos en un listado temporal,para ir sacando de este listado todos los nodos que se van asignando a una ruta
 
@@ -112,6 +127,7 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
 				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
 			}
+
 			else
 			{
 				//si hay un nodo que puede agregar a alguna ruta existente, se adiciona y no se crea nueva ruta
@@ -145,7 +161,7 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 		}
 		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
 	}
-	return lstRutatmp;
+	return lstRutatmpGeneral;
 }
 
 #endif

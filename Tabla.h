@@ -22,6 +22,7 @@ public:
 	//traer objeto, con el indice
 	T *Get(int indice);
 
+	int Totalizar(int (T::*metodo)());
 	//al hacer un =, no llevarse la memoria, sino que copie los registros
 	//Tabla<T> &operator=(Tabla<T> &c);
 };
@@ -41,7 +42,6 @@ template <class T>
 int Tabla<T>::Insertar(T &row) {//Referencia de Memoria
 	return this->Insertar(&row);//Inserto Con el puntero -> esta llamando a Tabla<T>::Insertar(T *row)
 }
-
 
 template <class T>
 int Tabla<T>::Insertar(T *row) {
@@ -116,6 +116,16 @@ T *Tabla<T>::Get(int indice) {
 	return &*_pT[indice];
 }
 
+
+template <class T>
+int Tabla<T>::Totalizar(int (T::*metodo)()){
+	int suma = 0;
+	for (int i = 0,x=0; i < lenght; i++)
+	{
+		suma +=(*_pT[i].*metodo)();
+	}
+	return suma;
+}
 /*
 template <class T>
 Tabla<T> &Tabla<T>::operator=(Tabla<T> &c) {

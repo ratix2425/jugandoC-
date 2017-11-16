@@ -162,11 +162,11 @@ int main()
 	}
 
 
-	//Crear las Rutas
-	Tabla<Ruta> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listao de Rutas
+	//Crear Tabla de Rutas
+	//es una tabla que contiene una tabla de rutas.
+	//Cada Tabla de Rutas, son las rutas establecidad por cada dia
+	Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
 	//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
-
-
 
 	/***************************************************************
 	*
@@ -203,17 +203,24 @@ int main()
 	}
 
 	printf("\n\nMostrar Rutas\n");
-	for (int i = 0; i < lstRuta->GetLength(); i++)
-	{
-		//Separar las rutas, de distintos dias
-		if(i>0 && lstRuta->Get(i-1)->GetDia()!=lstRuta->Get(i)->GetDia())
-		{
-			printf("\n");
-		}
 
-		lstRuta->Get(i)->Imprimir();
+	//recorre cada uno de las tablas de rutas que se crearon
+	for (int x = 0; x < lstRuta->GetLength(); x++)
+	{
+		Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
+		for (int i = 0; i < tablaRutaDia->GetLength(); i++)//recorremos cada ruta
+		{
+			tablaRutaDia->Get(i)->Imprimir();
+		}
+		
+		printf("\ntotal Distancia: %d",tablaRutaDia->Totalizar(&Ruta::TotalDistancia));
+		printf("\ntotal Demanda: %d",tablaRutaDia->Totalizar(&Ruta::TotalDemanda));
+		printf("\ntotal Cantidad Recoger: %d",tablaRutaDia->Totalizar(&Ruta::TotalCantidadRecoger));
+		printf("\n");
 	}
-	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger");
+
+
+	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger\nTD: Total Distancia");
 
 	getchar();
 

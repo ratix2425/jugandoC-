@@ -32,6 +32,8 @@ public:
 	int GetDemanda(int nDia);
 
 	int GetCantidadRecoger(int nDia);
+
+	int GetDistancia(int nDia);
 };
 
 Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia, int *inventario)
@@ -132,6 +134,11 @@ int Nodo::GetCantidadRecoger(int nDia)
 	}
 
 	return this->_inventario[nDia]+this->GetDemanda(nDia)-inventarioAnterior;
+}
+
+int Nodo::GetDistancia(int nDia)
+{
+	return this->_distancia[nDia];
 }
 
 #endif
