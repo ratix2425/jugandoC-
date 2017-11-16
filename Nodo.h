@@ -84,7 +84,7 @@ void Nodo::Imprimir()
 	printf("\n");
 	//imprimir inventario
 	printf("\n\tInventario:\n\t");
-	for (int i = 0; i < numeroDias; i++)//numeroNodo + 1 // se coloca el numero de nodos mas el deposito por eso es +1
+	for (int i = 0; i < numeroDias; i++)
 	{
 		printf("\tdia %d",i+1);
 	}
@@ -95,9 +95,9 @@ void Nodo::Imprimir()
 	}
 
 	printf("\n");
-	//imprimir inventario
+	//imprimir Cantidad Recoger
 	printf("\n\tCantidad Recoger:\n\t");
-	for (int i = 0; i < numeroDias; i++)//numeroNodo + 1 // se coloca el numero de nodos mas el deposito por eso es +1
+	for (int i = 0; i < numeroDias; i++)
 	{
 		printf("\tdia %d",i+1);
 	}
