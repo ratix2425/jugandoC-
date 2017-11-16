@@ -75,7 +75,7 @@ void Ruta::Imprimir()
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
 
-	
+
 
 
 };
@@ -97,6 +97,13 @@ Tabla<Ruta> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 		do
 		{
 			int indice = random(0,lstTmpNodo.GetLength()-1);//obtener un nodo al azar
+
+			//si el nodo no tiene inventario para este dia, no se agrega a ninguna ruta
+			if(lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=0)
+			{
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+				continue;
+			}
 			if(
 				rut->TotalCantidadRecoger()+lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=capacidadVehiculo//si la total cantidadRecoger de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
 				&& rut->nodos.GetLength()<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
