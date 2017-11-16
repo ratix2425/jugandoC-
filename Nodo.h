@@ -17,26 +17,31 @@ private:
 
 	int *_demanda;
 
+	int *_inventario;
+
 public:
 
-	Nodo(int numeroNodo, int capacidad, int indice,int *demanda,int *distancia);
+	Nodo(int numeroNodo, int capacidad, int indice,int *demanda,int *distancia, int *inventario);
 
 	~Nodo(void);
 
 	void Imprimir();
 
 	int NumeroNodo();
-	
+
 	int GetDemanda(int nDia);
+
+	int GetCantidadRecoger(int nDia);
 };
 
-Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia)
+Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia, int *inventario)
 {
 	this->_numeroNodo = numeroNodo;
 	this->_capacidad = capacidad;
 	this->_indiceArray = indice;
 	this->_demanda = demanda;
 	this->_distancia = distancia;
+	this->_inventario = inventario;
 
 }
 
@@ -76,6 +81,32 @@ void Nodo::Imprimir()
 		printf("%d\t",this->_distancia[i]);
 	}
 
+	printf("\n");
+	//imprimir inventario
+	printf("\n\tInventario:\n\t");
+	for (int i = 0; i < numeroDias; i++)//numeroNodo + 1 // se coloca el numero de nodos mas el deposito por eso es +1
+	{
+		printf("\tdia %d",i+1);
+	}
+	printf("\n\t");
+	for (int i = 0; i < numeroDias; i++)
+	{
+		printf("\t%d",this->_inventario[i]);
+	}
+
+	printf("\n");
+	//imprimir inventario
+	printf("\n\tCantidad Recoger:\n\t");
+	for (int i = 0; i < numeroDias; i++)//numeroNodo + 1 // se coloca el numero de nodos mas el deposito por eso es +1
+	{
+		printf("\tdia %d",i+1);
+	}
+	printf("\n\t");
+	for (int i = 0; i < numeroDias; i++)
+	{
+		printf("\t%d",this->GetCantidadRecoger(i));
+	}
+
 	printf("\n******************************************************************");
 	printf("\n\n");
 
@@ -89,6 +120,18 @@ int Nodo::NumeroNodo()
 int Nodo::GetDemanda(int nDia)
 {
 	return this->_demanda[nDia];
+}
+
+int Nodo::GetCantidadRecoger(int nDia)
+{
+	int inventarioAnterior=0;
+
+	if(nDia>0)
+	{
+		inventarioAnterior=this->_inventario[nDia-1];
+	}
+
+	return this->_inventario[nDia]+this->GetDemanda(nDia)-inventarioAnterior;
 }
 
 #endif

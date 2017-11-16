@@ -157,7 +157,7 @@ int main()
 	for (int i = 1; i <= numeroNodos; i++)
 	{
 		//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
-		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i));
+		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario.GetListY(i-1));
 		lstNodo.Insertar(nodo);
 	}
 
@@ -213,6 +213,7 @@ int main()
 
 		lstRuta->Get(i)->Imprimir();
 	}
+	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger");
 
 	getchar();
 
