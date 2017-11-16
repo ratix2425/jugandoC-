@@ -23,11 +23,6 @@ public:
 	T *Get(int indice);
 
 	//retorna la Suma de un metodo en especifico que se incluya como parametro
-	/// <summary>
-	/// Totalizars the specified metodo.
-	/// </summary>
-	/// <param name="metodo">The metodo.</param>
-	/// <returns></returns>
 	int Totalizar(int (T::*metodo)());
 	//al hacer un =, no llevarse la memoria, sino que copie los registros
 	//Tabla<T> &operator=(Tabla<T> &c);
