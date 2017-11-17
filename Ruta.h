@@ -26,6 +26,8 @@ public:
 
 	int TotalDistancia();
 
+	int TotalInventario();
+
 	void Imprimir();
 
 	static Tabla<Tabla<Ruta>> *GenerarRuta(Tabla<Nodo> &lstNodo);
@@ -54,6 +56,17 @@ int Ruta::TotalDemanda()
 	return total;
 }
 
+int Ruta::TotalCantidadRecoger()
+{
+	int total = 0;
+
+	for(int i=0;i<nodos.GetLength();i++)
+	{
+		total = total+nodos.Get(i)->GetCantidadRecoger(_nDia);
+	}
+	return total;
+}
+
 int Ruta::TotalDistancia()
 {
 	int total = 0;
@@ -72,16 +85,18 @@ int Ruta::TotalDistancia()
 	return total;
 }
 
-int Ruta::TotalCantidadRecoger()
+int Ruta::TotalInventario()
 {
 	int total = 0;
 
 	for(int i=0;i<nodos.GetLength();i++)
 	{
-		total = total+nodos.Get(i)->GetCantidadRecoger(_nDia);
+		total = total+nodos.Get(i)->GetInventario(_nDia);
 	}
 	return total;
 }
+
+
 
 void Ruta::Imprimir()
 {
@@ -90,6 +105,7 @@ void Ruta::Imprimir()
 	printf("\tTC: %d", this->TotalDemanda());
 	printf("\tTCR: %d", this->TotalCantidadRecoger());
 	printf("\tTD: %d", this->TotalDistancia());
+	printf("\tTI: %d", this->TotalInventario());
 	printf("\tNodos: ");
 	for(int i=0;i<this->nodos.GetLength();i++)
 	{
