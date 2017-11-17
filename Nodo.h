@@ -128,11 +128,11 @@ int Nodo::GetCantidadRecoger(int nDia)
 {
 	int inventarioAnterior=0;
 
-	if(nDia>0)
+	if(nDia>0)//si no es el primer dia, se trae el inventario del dia anterior
 	{
 		inventarioAnterior=this->_inventario[nDia-1];
 	}
-
+	//cantidad a recoger es lo que hay en inventario + demanda - inventario del dia anterior.
 	return this->_inventario[nDia]+this->GetDemanda(nDia)-inventarioAnterior;
 }
 

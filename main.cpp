@@ -204,6 +204,9 @@ int main()
 
 	printf("\n\nMostrar Rutas\n");
 
+
+	int totalDistancia=0, totalDemanda=0,totalCantidadRecoger=0;//variablers calculo general de las rutas
+	int tDe,tcr,tDi;//variables calculo temporal
 	//recorre cada uno de las tablas de rutas que se crearon
 	for (int x = 0; x < lstRuta->GetLength(); x++)
 	{
@@ -212,13 +215,25 @@ int main()
 		{
 			tablaRutaDia->Get(i)->Imprimir();
 		}
-		
-		printf("\ntotal Distancia: %d",tablaRutaDia->Totalizar(&Ruta::TotalDistancia));
-		printf("\ntotal Demanda: %d",tablaRutaDia->Totalizar(&Ruta::TotalDemanda));
-		printf("\ntotal Cantidad Recoger: %d",tablaRutaDia->Totalizar(&Ruta::TotalCantidadRecoger));
-		printf("\n");
-	}
 
+		tDi=tablaRutaDia->Totalizar(&Ruta::TotalDistancia);
+		tDe=tablaRutaDia->Totalizar(&Ruta::TotalDemanda);
+		tcr=tablaRutaDia->Totalizar(&Ruta::TotalCantidadRecoger);
+
+		totalDistancia+=tDi;
+		totalDemanda+=tDe;
+		totalCantidadRecoger +=tcr;
+
+		printf("\n\nTD: %d\t\tTCR: %d\t\tTC: %d",tDi,tcr,tDe);
+		//printf("\ntotal Demanda: %d",tDe);
+		//printf("\ntotal Cantidad Recoger: %d",tcr);
+		printf("\n\n");
+	}
+	printf("\n\n");
+	printf("--------- Total -------------");
+	printf("\ntotal Distancia: %d",totalDistancia);
+	printf("\ntotal Demanda: %d",totalDemanda);
+	printf("\ntotal Cantidad Recoger: %d",totalCantidadRecoger);
 
 	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger\nTD: Total Distancia");
 
