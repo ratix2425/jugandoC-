@@ -106,7 +106,6 @@ int main()
 	int totalDistancia=0;
 
 	//Ejecutar estas Instrucciones por 5 minuto
-	//por ahora que lo realice 100 veces
 	unsigned tiempoEjecutado=clock();
 	int segundosEjecucion=0;
 	int ultimoSegundo=0;
@@ -200,14 +199,6 @@ int main()
 		}
 		else
 		{
-			//Evalua la distancia de la Ruta Corta, con la Nueva Ruta, 
-			int distanciaNuevaRuta =0 ;
-			for (int x = 0; x < lstRuta->GetLength(); x++)
-			{
-				Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
-				distanciaNuevaRuta+=tablaRutaDia->Totalizar(&Ruta::TotalDistancia);
-			}
-
 			//si la Nueva Ruta tiene Menor Distancia, se reemplaza la Ruta Corta
 			if(totalDistancia>distanciaNuevaRuta)
 			{
@@ -215,9 +206,8 @@ int main()
 				//printf("\n\nRuta fue reemplazada ");
 				//mostrarRuta(lstRutaCorta);
 
-
 				totalDistancia=distanciaNuevaRuta;
-				lstRutaCorta->Clear();
+				lstRutaCorta->Clear();//libera memoria
 				lstRutaCorta = lstRuta;
 			}
 
