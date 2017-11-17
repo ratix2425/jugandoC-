@@ -114,7 +114,7 @@ template <class T>
 void Tabla<T>::Clear() {
 	delete[] _pT;//borrar el listado
 
-	_pT=new T*[0];//construir nuevamente array con cantidades en 0
+	_pT=NULL;
 	lenght=0;
 }
 

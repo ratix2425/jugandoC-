@@ -207,8 +207,26 @@ int main()
 				//mostrarRuta(lstRutaCorta);
 
 				totalDistancia=distanciaNuevaRuta;
+				
+				
+				for (int x = 0; x < lstRutaCorta->GetLength(); x++)
+				{
+					Tabla<Ruta> *tablaRutaDia = lstRutaCorta->Get(x);
+					tablaRutaDia->Clear();
+				}
+
 				lstRutaCorta->Clear();//libera memoria
 				lstRutaCorta = lstRuta;
+			}
+			else//liberar memoria, esta ruta nueva no se usa
+			{
+				for (int x = 0; x < lstRuta->GetLength(); x++)
+				{
+					Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
+					tablaRutaDia->Clear();
+				}
+
+				lstRuta->Clear();//libera memoria
 			}
 
 		}
