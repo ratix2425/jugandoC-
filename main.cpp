@@ -192,7 +192,7 @@ int main()
 			distanciaNuevaRuta+=tablaRutaDia->Totalizar(&Ruta::TotalDistancia);
 		}
 
-		if(lstRutaCorta==NULL)
+		if(lstRutaCorta==NULL)//inicialmente no hay ruta, si es la primera que se ejecuta, lo toma como ruta inicial
 		{
 			lstRutaCorta=lstRuta;
 			totalDistancia=distanciaNuevaRuta;
@@ -213,16 +213,16 @@ int main()
 
 		}
 
-		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);
+		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);//evaluar cuantos segundos han corrido desde la vez que se inicio el ciclo
 
-		if(ultimoSegundo!=segundosEjecucion)
+		if(ultimoSegundo!=segundosEjecucion)//si los segundos han cambiado
 		{
 			LimpiarPantalla();
-			printf("\nSegundos %d",(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC));
-			segundosEjecucion=ultimoSegundo;
+			printf("\nSegundos %d",(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC));//imprime el tiempo que lleva
+			segundosEjecucion=ultimoSegundo;//actualizo los segundos que lleva ejecutando
 		}
 	}
-	while(segundosEjecucion<=tiempoEjecucion);
+	while(segundosEjecucion<=tiempoEjecucion);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
 	LimpiarPantalla();
 
 
