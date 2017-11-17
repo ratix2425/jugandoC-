@@ -60,7 +60,14 @@ int Ruta::TotalDistancia()
 
 	for(int i=0;i<nodos.GetLength();i++)
 	{
-		total = total+nodos.Get(i)->GetDistancia(_nDia);
+		if(i==nodos.GetLength()-1)//si es el ultimo nodo, se calcula la distancia que tiene ese nodo, con el indice 0, o nodo principal
+		{
+			total = total+nodos.Get(i)->GetDistancia(0);
+		}
+		else
+		{
+			total = total+nodos.Get(i)->GetDistancia(nodos.Get(i+1)->NumeroNodo());//calcula la distancia del nodo actual, con el nodo siguiente de la lista
+		}
 	}
 	return total;
 }
