@@ -5,6 +5,7 @@
 #define numeroNodos  10
 #define numeroDias 2
 #define maxNodoRuta 4
+#define tiempoEjecucion 30 //en segundos
 
 
 //Funcion General

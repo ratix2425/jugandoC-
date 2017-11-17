@@ -17,6 +17,7 @@ public:
 	int Insertar(Tabla<T> &c);
 	void Remover(T *row);
 	void Remover(int nElem);
+	void Clear();
 
 	int GetLength(){ return this->lenght;}
 	//traer objeto, con el indice
@@ -107,6 +108,14 @@ void Tabla<T>::Remover(T *row){
 template <class T>
 void Tabla<T>::Remover(int nElem) {
 	this->Remover(this->Get(nElem));
+}
+
+template <class T>
+void Tabla<T>::Clear() {
+	delete[] _pT;//borrar el listado
+
+	_pT=new T*[0];//construir nuevamente array con cantidades en 0
+	lenght=0;
 }
 
 template <class T>

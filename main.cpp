@@ -9,6 +9,9 @@
 
 int random(int inicio, int final);
 
+void mostrarRuta(Tabla<Tabla<Ruta>> *lstRuta);
+void LimpiarPantalla();
+
 int main()
 {
 	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
@@ -62,6 +65,8 @@ int main()
 
 	//Creacion de los Nodos
 	Tabla<Nodo> lstNodo;
+	Tabla<Tabla<Ruta>> *lstRutaCorta = NULL;
+
 
 	//Llenar Valores para la Distancia
 	//asignar los valores 
@@ -97,76 +102,139 @@ int main()
 		}
 	}
 
-	//Llenar Tabla Inventario
-	indice = 0;
 
-	int tmpInventarioAnterior;
-	int tmpDemanda;
-	int tmpCantidadRecoger;
+	int totalDistancia=0;
 
-	//recorrer todos los nodos
-	for (int y = 0;y< lstInventario.GetLengthY() ; y++)
+	//Ejecutar estas Instrucciones por 5 minuto
+	//por ahora que lo realice 100 veces
+	unsigned tiempoEjecutado=clock();
+	int segundosEjecucion=0;
+	int ultimoSegundo=0;
+	do
 	{
-		for (int x = 0; x<lstInventario.GetLengthX(); x++)
+		//Llenar Tabla Inventario
+		indice = 0;
+
+		int tmpInventarioAnterior=0;
+		int tmpDemanda=0;
+		int tmpCantidadRecoger=0;
+
+		//recorrer todos los nodos
+		for (int y = 0;y< lstInventario.GetLengthY() ; y++)
 		{
-			tmpInventarioAnterior = 0;
-			if(x>0)//si no es el primer dia, traer el inventario anterior
+			for (int x = 0; x<lstInventario.GetLengthX(); x++)
 			{
-				tmpInventarioAnterior = lstInventario.Get(x-1,y);
-			}
-			tmpDemanda = lstDemanda.Get(x,y);
-
-
-			//con esto evaluamos, si el rango maximo para CR es la capacidad disponible o la capacidad del vehiculo
-			int disponibleInventario = lstCapacidadAlmacenamiento.Get(0,y)-tmpInventarioAnterior;
-			int mayor = capacidadVehiculo;
-			if(disponibleInventario<capacidadVehiculo)
-			{
-				mayor=disponibleInventario;
-			}
-
-			//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
-			int diferencia =tmpInventarioAnterior- tmpDemanda;
-			if(diferencia>=0)//si la diferencia en positiva,es por que la capacidad de inventario, suple la capacidad de demanda
-			{
-				//no necesitamos evaluar, ya que el inventario disponible, tiene la cantidad necesaria
-				tmpCantidadRecoger =0;//random(0,mayor);
-			}
-			else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
-			{
-				diferencia*=-1;
-
-				if(diferencia<=mayor)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
+				tmpInventarioAnterior = 0;
+				if(x>0)//si no es el primer dia, traer el inventario anterior
 				{
-					tmpCantidadRecoger = random(diferencia,mayor);
+					tmpInventarioAnterior = lstInventario.Get(x-1,y);
 				}
-				else//si la diferencia es mayor a la capacidad del vehiculo, CR es un numero entre 0 y capacidad del vehiculo
+				tmpDemanda = lstDemanda.Get(x,y);
+
+
+				//con esto evaluamos, si el rango maximo para CR es la capacidad disponible o la capacidad del vehiculo
+				int disponibleInventario = lstCapacidadAlmacenamiento.Get(0,y)-tmpInventarioAnterior;
+				int mayor = capacidadVehiculo;
+				if(disponibleInventario<capacidadVehiculo)
 				{
-					tmpCantidadRecoger =random(0,mayor);
+					mayor=disponibleInventario;
 				}
+
+				//de esta forma se controla que la operacion in = i+cd-d  // no nos vaya a dar negativo
+				int diferencia =tmpInventarioAnterior- tmpDemanda;
+				if(diferencia>=0)//si la diferencia en positiva,es por que la capacidad de inventario, suple la capacidad de demanda
+				{
+					//no necesitamos evaluar, ya que el inventario disponible, tiene la cantidad necesaria
+					tmpCantidadRecoger =0;//random(0,mayor);
+				}
+				else//si la diferencia es negativa (hay mas en la demanda que en el inventario)
+				{
+					diferencia*=-1;
+
+					if(diferencia<=mayor)//si la diferencia es menor a la capacidad del vehiculo, CR es un numero al azar entre diferencia y capacidad del vehiculo
+					{
+						tmpCantidadRecoger = random(diferencia,mayor);
+					}
+					else//si la diferencia es mayor a la capacidad del vehiculo, CR es un numero entre 0 y capacidad del vehiculo
+					{
+						tmpCantidadRecoger =random(0,mayor);
+					}
+				}
+
+				//printf("cantidad a recoger = %d\n",tmpCantidadRecoger);
+
+				//Inventario = inventarioAnterior + cantidadRecoger - demanda
+				lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
+			}
+		}
+
+
+		lstNodo.Clear();
+		//Insertar Nodos a la Tabla
+		for (int i = 1; i <= numeroNodos; i++)
+		{
+			//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
+			Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario.GetListY(i-1));
+			lstNodo.Insertar(nodo);
+		}
+
+
+		//Crear Tabla de Rutas
+		//es una tabla que contiene una tabla de rutas.
+		//Cada Tabla de Rutas, son las rutas establecidad por cada dia
+		Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
+		//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
+
+		//calcular la distancia
+		int distanciaNuevaRuta =0 ;
+		for (int x = 0; x < lstRuta->GetLength(); x++)
+		{
+			Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
+			distanciaNuevaRuta+=tablaRutaDia->Totalizar(&Ruta::TotalDistancia);
+		}
+
+		if(lstRutaCorta==NULL)
+		{
+			lstRutaCorta=lstRuta;
+			totalDistancia=distanciaNuevaRuta;
+		}
+		else
+		{
+			//Evalua la distancia de la Ruta Corta, con la Nueva Ruta, 
+			int distanciaNuevaRuta =0 ;
+			for (int x = 0; x < lstRuta->GetLength(); x++)
+			{
+				Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
+				distanciaNuevaRuta+=tablaRutaDia->Totalizar(&Ruta::TotalDistancia);
 			}
 
-			//printf("cantidad a recoger = %d\n",tmpCantidadRecoger);
+			//si la Nueva Ruta tiene Menor Distancia, se reemplaza la Ruta Corta
+			if(totalDistancia>distanciaNuevaRuta)
+			{
+				//imprimir que la ruta fue reemplaza
+				//printf("\n\nRuta fue reemplazada ");
+				//mostrarRuta(lstRutaCorta);
 
-			//Inventario = inventarioAnterior + cantidadRecoger - demanda
-			lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
+
+				totalDistancia=distanciaNuevaRuta;
+				lstRutaCorta->Clear();
+				lstRutaCorta = lstRuta;
+			}
+
+		}
+
+		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);
+
+		if(ultimoSegundo!=segundosEjecucion)
+		{
+			LimpiarPantalla();
+			printf("\nSegundos %d",(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC));
+			segundosEjecucion=ultimoSegundo;
 		}
 	}
+	while(segundosEjecucion<=tiempoEjecucion);
+	LimpiarPantalla();
 
-	//Insertar Nodos a la Tabla
-	for (int i = 1; i <= numeroNodos; i++)
-	{
-		//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
-		Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario.GetListY(i-1));
-		lstNodo.Insertar(nodo);
-	}
-
-
-	//Crear Tabla de Rutas
-	//es una tabla que contiene una tabla de rutas.
-	//Cada Tabla de Rutas, son las rutas establecidad por cada dia
-	Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
-	//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
 	/***************************************************************
 	*
@@ -179,6 +247,8 @@ int main()
 	printf("\nN de Dias : %d\n", numeroDias);
 	printf("\nMaximo Nodos por Rutas : %d\n", maxNodoRuta);
 
+
+	/*
 	//imprimir
 	printf("\n\ndistancia\n");
 	lstDistancia.Imprimir("%d");
@@ -196,16 +266,26 @@ int main()
 	printf("\nInventario\n");
 	lstInventario.Imprimir("%d");
 
+	*/
+
 	printf("\n\nMostrar Nodos\n");
 	for (int i = 0; i < lstNodo.GetLength(); i++)
 	{
 		lstNodo.Get(i)->Imprimir();
 	}
 
-	printf("\n\nMostrar Rutas\n");
+	printf("\n\nMostrar Rutas Solucion Final\n");
 
+	mostrarRuta(lstRutaCorta);
 
-	int totalDistancia=0, totalDemanda=0,totalCantidadRecoger=0,totalInventario=0;//variablers calculo general de las rutas
+	getchar();
+
+	return 0;
+}
+
+void mostrarRuta(Tabla<Tabla<Ruta>> *lstRuta)
+{
+	int totalDistancia=0, totalDemanda=0,totalCantidadRecoger=0,totalInventario=0;//variables calculo general de las rutas
 	int tDe,tcr,tDi,ti;//variables calculo temporal
 	//recorre cada uno de las tablas de rutas que se crearon
 	for (int x = 0; x < lstRuta->GetLength(); x++)
@@ -238,9 +318,9 @@ int main()
 	printf("\ntotal Cantidad Recoger: %d",totalCantidadRecoger);
 	printf("\ntotal Inventario: %d",totalInventario);
 	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger\nTD: Total Distancia\nTI: Total Inventario");
-
-	getchar();
-
-	return 0;
 }
-
+void LimpiarPantalla()
+{
+	system("cls");//Creo que Solo Funciona en Windows, para linux es Clear
+	//system("clear");//linux
+}
