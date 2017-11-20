@@ -14,7 +14,7 @@ void LimpiarPantalla();
 
 int main()
 {
-	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
+	srand (time(NULL));//la semilla para generar los nÃºmeros aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
@@ -286,9 +286,9 @@ int main()
 	*/
 
 	printf("\n\nMostrar Nodos\n");
-	for (int i = 0; i < lstNodo->GetLength(); i++)
+	for (int i = 0; i < lstNodoCorto->GetLength(); i++)
 	{
-		lstNodo->Get(i)->Imprimir();
+		lstNodoCorto->Get(i)->Imprimir();
 	}
 
 	printf("\n\nMostrar Rutas Solucion Final\n");
