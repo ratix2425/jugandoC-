@@ -183,6 +183,7 @@ Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 			}
 		}
 		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
+
 	}
 	return lstRutatmpGeneral;
 }

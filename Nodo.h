@@ -51,8 +51,8 @@ Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distanci
 
 Nodo::~Nodo(void)
 {
-	if(this->_demanda)
-		delete[] this->_demanda;
+	//if(this->_demanda)
+	//	delete[] this->_demanda;
 }
 
 void Nodo::Imprimir()

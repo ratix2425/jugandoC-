@@ -64,7 +64,8 @@ int main()
 
 
 	//Creacion de los Nodos
-	Tabla<Nodo> lstNodo;
+	Tabla<Nodo> *lstNodo;
+	Tabla<Nodo> *lstNodoCorto;
 	Tabla<Tabla<Ruta>> *lstRutaCorta = NULL;
 
 
@@ -101,7 +102,6 @@ int main()
 			lstCapacidadAlmacenamiento.Set(x,y,capacidad[y]);
 		}
 	}
-
 
 	int totalDistancia=0;
 
@@ -167,21 +167,21 @@ int main()
 			}
 		}
 
-
-		lstNodo.Clear();
+		lstNodo= new Tabla<Nodo>();
 		//Insertar Nodos a la Tabla
 		for (int i = 1; i <= numeroNodos; i++)
 		{
 			//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
 			Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario.GetListY(i-1));
-			lstNodo.Insertar(nodo);
+			lstNodo->Insertar(nodo);
 		}
 
 
 		//Crear Tabla de Rutas
 		//es una tabla que contiene una tabla de rutas.
 		//Cada Tabla de Rutas, son las rutas establecidad por cada dia
-		Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
+
+		Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(*lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
 		//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
 		//calcular la distancia
@@ -195,6 +195,7 @@ int main()
 		if(lstRutaCorta==NULL)//inicialmente no hay ruta, si es la primera que se ejecuta, lo toma como ruta inicial
 		{
 			lstRutaCorta=lstRuta;
+			lstNodoCorto = lstNodo;
 			totalDistancia=distanciaNuevaRuta;
 		}
 		else
@@ -207,29 +208,37 @@ int main()
 				//mostrarRuta(lstRutaCorta);
 
 				totalDistancia=distanciaNuevaRuta;
-				
-				
+
+
 				for (int x = 0; x < lstRutaCorta->GetLength(); x++)
 				{
 					Tabla<Ruta> *tablaRutaDia = lstRutaCorta->Get(x);
-					tablaRutaDia->Clear();
+					tablaRutaDia->Liberar();
 				}
 
-				lstRutaCorta->Clear();//libera memoria
+				lstRutaCorta->Liberar();//libera memoria
+				delete lstRutaCorta;//destruir el objeto
+				lstNodoCorto->Liberar();
+				delete lstNodoCorto;
 				lstRutaCorta = lstRuta;
+				lstNodoCorto = lstNodo;
 			}
 			else//liberar memoria, esta ruta nueva no se usa
 			{
 				for (int x = 0; x < lstRuta->GetLength(); x++)
 				{
 					Tabla<Ruta> *tablaRutaDia = lstRuta->Get(x);
-					tablaRutaDia->Clear();
+					tablaRutaDia->Liberar();
 				}
 
-				lstRuta->Clear();//libera memoria
+				lstRuta->Liberar();//libera memoria
+				delete lstRuta;//destruir el objeto
+				lstNodo->Liberar();
+				delete lstNodo;
 			}
 
 		}
+
 
 		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);//evaluar cuantos segundos han corrido desde la vez que se inicio el ciclo
 
@@ -277,9 +286,9 @@ int main()
 	*/
 
 	printf("\n\nMostrar Nodos\n");
-	for (int i = 0; i < lstNodo.GetLength(); i++)
+	for (int i = 0; i < lstNodo->GetLength(); i++)
 	{
-		lstNodo.Get(i)->Imprimir();
+		lstNodo->Get(i)->Imprimir();
 	}
 
 	printf("\n\nMostrar Rutas Solucion Final\n");

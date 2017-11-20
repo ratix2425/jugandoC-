@@ -17,7 +17,10 @@ public:
 	int Insertar(Tabla<T> &c);
 	void Remover(T *row);
 	void Remover(int nElem);
+	//Libera los punteros al array _pT
 	void Clear();
+	//Libera los punteros al array _pT, y ademas destruye los objetos a los que apunta
+	void Liberar();//se usa cuando los objetos no se van a volver a usar en ningun otra parte del codigo
 
 	int GetLength(){ return this->lenght;}
 	//traer objeto, con el indice
@@ -38,7 +41,8 @@ Tabla<T>::Tabla(void) {
 
 template <class T>
 Tabla<T>::~Tabla() {
-	delete[] _pT;
+	//delete[] _pT;
+	this->Clear();
 }
 
 template <class T>
@@ -99,6 +103,7 @@ void Tabla<T>::Remover(T *row){
 	}
 	lenght--;
 
+	//delete row;
 	delete[] _pT;//borrar el array anterior
 
 	_pT= newA;//Asignar nueva ubicacion de memoria de los Array
@@ -112,11 +117,31 @@ void Tabla<T>::Remover(int nElem) {
 
 template <class T>
 void Tabla<T>::Clear() {
-	delete[] _pT;//borrar el listado
 
+
+	/*for (int i = 0; i < lenght; i++)
+	{
+		delete _pT[i];
+	}*/
+
+	delete[] _pT;//borrar el listado
 	_pT=NULL;
 	lenght=0;
 }
+
+template <class T>
+void Tabla<T>::Liberar() {
+
+	for (int i = 0; i < lenght; i++)
+	{
+		delete _pT[i];
+	}
+
+	delete[] _pT;//borrar el listado
+	_pT=NULL;
+	lenght=0;
+}
+
 
 template <class T>
 T *Tabla<T>::Get(int indice) { 
