@@ -266,22 +266,22 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 
 			//revisar si en este dia hay mas de 2 rutas que tengan 3 nodos
 
-			int cantidadNodo=0;
+			int cantidadRutas=0;
 			for(int r=0;r<ruta->GetLength();r++)
 			{
 				if(ruta->Get(r)->nodos.GetLength()>=minimoNodoIntercambioRutas)
 				{
-					cantidadNodo++;
+					cantidadRutas++;
 				}
 
-				if(cantidadNodo>=minimoNodoIntercambioRutas)
+				if(cantidadRutas>=2)
 				{
 					break;
 				}
 			}
 
 			//si la cantidad de rutas en el dia, no supera los 3 nodos, se pasa al siguiente dia
-			if(cantidadNodo<minimoNodoIntercambioRutas)
+			if(cantidadRutas<2)//minimo debe haber 2 rutas
 			{
 				Error("\nNo tiene mas de %d nodos",minimoNodoIntercambioRutas);
 				continue;
