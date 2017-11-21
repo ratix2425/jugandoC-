@@ -26,6 +26,9 @@ public:
 	//traer objeto, con el indice
 	T *Get(int indice);
 
+	//signar Objeto Indice Especifico
+	void Set(int indice, T *obj);
+
 	//retorna la Suma de un metodo en especifico que se incluya como parametro
 	int Totalizar(int (T::*metodo)()); 
 
@@ -121,7 +124,7 @@ void Tabla<T>::Clear() {
 
 	/*for (int i = 0; i < lenght; i++)
 	{
-		delete _pT[i];
+	delete _pT[i];
 	}*/
 
 	delete[] _pT;//borrar el listado
@@ -150,6 +153,18 @@ T *Tabla<T>::Get(int indice) {
 		throw "está saliendo de los índices de la Tabla";
 	}
 	return &*_pT[indice];
+}
+
+
+template <class T>
+void Tabla<T>::Set(int indice, T *obj)
+{
+	if(indice>=lenght || indice<0)
+	{
+		throw "está saliendo de los índices de la Tabla";
+	}
+
+	_pT[indice]  = obj;
 }
 
 

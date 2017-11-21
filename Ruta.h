@@ -3,6 +3,8 @@
 
 
 #include "Tabla.h"
+#include "Nodo.h"
+#include "Win.h"
 
 class Ruta
 {
@@ -16,7 +18,14 @@ public:
 
 	Ruta(int numeroRuta, int nDia);
 
+	~Ruta()
+	{
+		nodos.Clear();
+	}
+
 	Tabla<Nodo> nodos;
+
+	int GetRuta();
 
 	int GetDia();
 
@@ -32,12 +41,18 @@ public:
 
 	static Tabla<Tabla<Ruta>> *GenerarRuta(Tabla<Nodo> &lstNodo);
 
+	static void IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta);
 };
 
 Ruta::Ruta(int numeroRuta, int nDia)
 {
 	_numeroRuta=numeroRuta;
 	_nDia = nDia;
+}
+
+int Ruta::GetRuta()
+{
+	return _numeroRuta;
 }
 
 int Ruta::GetDia()
@@ -181,11 +196,199 @@ Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 					lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
 				}
 			}
+
 		}
 		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
 
 	}
+
 	return lstRutatmpGeneral;
 }
 
+void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
+{
+	Nodo *nodoPuente;
+	Tabla<Ruta> *ruta;
+
+
+	Debug("\nInicia Intercambio de Nodos\n");
+
+
+	int cantidadRutas=0;
+
+	//antes de poner a correr el tiempo revisamos, si algun dia, tiene rutas con mas de minimoNodoIntercambioRutas nodos y si no tiene que no realice ninguna accion aqui
+	for(int i=0;i<lstRuta->GetLength();i++)
+	{
+		int cantidadNodo=0;
+
+		cantidadRutas=0;
+		ruta = lstRuta->Get(i);
+		for(int r=0;r<ruta->GetLength();r++)
+		{
+			if(ruta->Get(r)->nodos.GetLength()>=minimoNodoIntercambioRutas)
+			{
+				cantidadNodo++;
+			}
+
+			if(cantidadNodo>=2)//para poder intercambiar, minimo debe haber 2 nodos.
+			{
+				cantidadRutas++;
+				break;
+			}
+		}
+
+		if(cantidadRutas>1)//si hay almenos una ruta, que tenga 2 nodos
+		{
+			break;
+		}
+	}
+
+	if(cantidadRutas==0)
+	{
+		Error("\nNo existen dias, que tenga mas de 2 rutas almenos con %d Nodos",minimoNodoIntercambioRutas);
+		return;
+	}
+
+
+	unsigned tiempoEjecutado=clock();
+	int segundosEjecucion=0;
+	int ultimoSegundo=0;
+	do
+	{
+
+		for(int i=0;i<lstRuta->GetLength();i++)
+		{
+			Debug("\nDia %d",i);
+
+			//Obtener Rutas del Dia
+			Tabla<Ruta> *ruta = lstRuta->Get(i);
+
+
+			//revisar si en este dia hay mas de 2 rutas que tengan 3 nodos
+
+			int cantidadNodo=0;
+			for(int r=0;r<ruta->GetLength();r++)
+			{
+				if(ruta->Get(r)->nodos.GetLength()>=minimoNodoIntercambioRutas)
+				{
+					cantidadNodo++;
+				}
+
+				if(cantidadNodo>=minimoNodoIntercambioRutas)
+				{
+					break;
+				}
+			}
+
+			//si la cantidad de rutas en el dia, no supera los 3 nodos, se pasa al siguiente dia
+			if(cantidadNodo<minimoNodoIntercambioRutas)
+			{
+				Error("\nNo tiene mas de %d nodos",minimoNodoIntercambioRutas);
+				continue;
+			}
+
+			int indiceRuta1=-1;
+			int indiceRuta2=-1;
+
+			//Obtener indice para Ruta1, que tenga mas de minimoNodoIntercambioRutas nodos
+			do
+			{
+				int azar = random(0,ruta->GetLength()-1);
+				if(ruta->Get(azar)->nodos.GetLength()>=minimoNodoIntercambioRutas)
+				{
+					indiceRuta1 = azar;
+				}
+			}
+			while (indiceRuta1<0);
+
+			//Obtener indice para Ruta2, que tenga mas de minimoNodoIntercambioRutas nodos
+			do
+			{
+				int azar = random(0,ruta->GetLength()-1);
+				if(ruta->Get(azar)->nodos.GetLength()>=minimoNodoIntercambioRutas && indiceRuta1!=azar)
+				{
+					indiceRuta2 = azar;
+				}
+
+			}
+			while (indiceRuta2<0);
+
+			Debug("\nIntercambiar los siguientes rutas %d y %d", ruta->Get(indiceRuta1)->GetRuta(),  ruta->Get(indiceRuta2)->GetRuta());
+
+
+			//Crea una Ruta Duplicada
+			//Tabla<Ruta> *rutaDuplicada = new Tabla<Ruta>(*ruta);
+
+			int nodoRuta1 = random(0,ruta->Get(indiceRuta1)->nodos.GetLength()-1);
+			int nodoRuta2 = random(0,ruta->Get(indiceRuta2)->nodos.GetLength()-1);
+
+
+
+			printf("\n*Actual*******************");
+			ruta->Get(indiceRuta1)->Imprimir();
+			ruta->Get(indiceRuta2)->Imprimir();
+			int totalDistancia = ruta->Totalizar(&Ruta::TotalDistancia);
+			Debug("\ntotal Distancia %d",totalDistancia);
+
+			nodoPuente=ruta->Get(indiceRuta1)->nodos.Get(nodoRuta1);
+
+			ruta->Get(indiceRuta1)->nodos.Set(nodoRuta1,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta2));
+			ruta->Get(indiceRuta2)->nodos.Set(nodoRuta2,nodoPuente);
+
+
+			printf("\n*Nueva*******************");
+			ruta->Get(indiceRuta1)->Imprimir();
+			ruta->Get(indiceRuta2)->Imprimir();
+			int totalDistanciaNueva = ruta->Totalizar(&Ruta::TotalDistancia);
+			Debug("\ntotal Distancia %d",totalDistanciaNueva);
+
+
+			BOOL valido = TRUE;
+
+
+			//Verificar que las nuevas rutas aun respete, que no pueda superar la capacidad de vehiculo
+			if(ruta->Get(indiceRuta1)->TotalCantidadRecoger()>capacidadVehiculo
+				||
+				ruta->Get(indiceRuta2)->TotalCantidadRecoger()>capacidadVehiculo
+				)
+			{
+				Error("\nNo se Actualiza Ruta, la cantidad a recoger Supera la capacidad de vehiculo");
+				valido=FALSE;
+			}
+			else if(totalDistanciaNueva>=totalDistancia)
+			{
+				Error("\nNo se Actualiza Ruta, La distancia Nueva es mayor a la Actual");
+				valido=FALSE;
+			}
+
+			//Si no es Valido, se vuelve a dejar la ruta como estaba;
+			if(!valido)
+			{
+				nodoPuente=ruta->Get(indiceRuta1)->nodos.Get(nodoRuta1);
+				ruta->Get(indiceRuta1)->nodos.Set(nodoRuta1,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta2));
+				ruta->Get(indiceRuta2)->nodos.Set(nodoRuta2,nodoPuente);
+			}
+			else
+			{
+				Notice("\nSe actualiza Ruta");
+			}
+
+			printf("\n");
+
+			//Validacion para intercambio de Nodos
+
+			//delete rutaDuplicada;
+
+		}
+		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);//evaluar cuantos segundos han corrido desde la vez que se inicio el ciclo
+
+		if(ultimoSegundo!=segundosEjecucion)//si los segundos han cambiado
+		{
+			//LimpiarPantalla();
+			printf("\nSegundos %d",(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC));//imprime el tiempo que lleva
+			segundosEjecucion=ultimoSegundo;//actualizo los segundos que lleva ejecutando
+		}
+	}
+	while(segundosEjecucion<=tiempoEjecucionIntercambioNodos);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
+}
 #endif

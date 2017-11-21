@@ -6,15 +6,18 @@
 #include "Tabla.h"
 #include "Nodo.h"
 #include "Ruta.h"
+#include "Win.h"
 
 int random(int inicio, int final);
 
 void mostrarRuta(Tabla<Tabla<Ruta>> *lstRuta);
-void LimpiarPantalla();
+
+
 
 int main()
 {
-	srand (time(NULL));//la semilla para generar los nÃºmeros aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
+
+	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
@@ -60,14 +63,14 @@ int main()
 	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,numeroNodos); // matriz de almacenamiento de 1 x numero de Nodos
 
 
-	ArrayDinamico<int> lstInventario(numeroDias,numeroNodos);//
+
 
 
 	//Creacion de los Nodos
 	Tabla<Nodo> *lstNodo;
 	Tabla<Nodo> *lstNodoCorto;
 	Tabla<Tabla<Ruta>> *lstRutaCorta = NULL;
-
+	ArrayDinamico<int> *lstInventarioCorto;//(numeroDias,numeroNodos);//  *lstInventario;//(numeroDias,numeroNodos);//
 
 	//Llenar Valores para la Distancia
 	//asignar los valores 
@@ -118,15 +121,18 @@ int main()
 		int tmpDemanda=0;
 		int tmpCantidadRecoger=0;
 
+
+		ArrayDinamico<int> *lstInventario=new  ArrayDinamico<int>(numeroDias,numeroNodos);
+
 		//recorrer todos los nodos
-		for (int y = 0;y< lstInventario.GetLengthY() ; y++)
+		for (int y = 0;y< lstInventario->GetLengthY() ; y++)
 		{
-			for (int x = 0; x<lstInventario.GetLengthX(); x++)
+			for (int x = 0; x<lstInventario->GetLengthX(); x++)
 			{
 				tmpInventarioAnterior = 0;
 				if(x>0)//si no es el primer dia, traer el inventario anterior
 				{
-					tmpInventarioAnterior = lstInventario.Get(x-1,y);
+					tmpInventarioAnterior = lstInventario->Get(x-1,y);
 				}
 				tmpDemanda = lstDemanda.Get(x,y);
 
@@ -163,7 +169,7 @@ int main()
 				//printf("cantidad a recoger = %d\n",tmpCantidadRecoger);
 
 				//Inventario = inventarioAnterior + cantidadRecoger - demanda
-				lstInventario.Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
+				lstInventario->Set(x,y,tmpInventarioAnterior+tmpCantidadRecoger-tmpDemanda);
 			}
 		}
 
@@ -172,7 +178,7 @@ int main()
 		for (int i = 1; i <= numeroNodos; i++)
 		{
 			//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
-			Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario.GetListY(i-1));
+			Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario->GetListY(i-1));
 			lstNodo->Insertar(nodo);
 		}
 
@@ -182,6 +188,7 @@ int main()
 		//Cada Tabla de Rutas, son las rutas establecidad por cada dia
 
 		Tabla<Tabla<Ruta>> *lstRuta = Ruta::GenerarRuta(*lstNodo);//Declarar variable, donde va a quedar el listado de Rutas
+
 		//GenerarRuta(lstRuta,lstNodo);//Ruta.h GenerarRuta
 
 		//calcular la distancia
@@ -196,6 +203,7 @@ int main()
 		{
 			lstRutaCorta=lstRuta;
 			lstNodoCorto = lstNodo;
+			lstInventarioCorto = lstInventario;
 			totalDistancia=distanciaNuevaRuta;
 		}
 		else
@@ -220,6 +228,8 @@ int main()
 				delete lstRutaCorta;//destruir el objeto
 				lstNodoCorto->Liberar();
 				delete lstNodoCorto;
+				delete lstInventarioCorto;
+				lstInventarioCorto = lstInventario;
 				lstRutaCorta = lstRuta;
 				lstNodoCorto = lstNodo;
 			}
@@ -235,10 +245,10 @@ int main()
 				delete lstRuta;//destruir el objeto
 				lstNodo->Liberar();
 				delete lstNodo;
+				delete lstInventario;
 			}
 
 		}
-
 
 		ultimoSegundo=(int(clock()-tiempoEjecutado)/CLOCKS_PER_SEC);//evaluar cuantos segundos han corrido desde la vez que se inicio el ciclo
 
@@ -251,6 +261,10 @@ int main()
 	}
 	while(segundosEjecucion<=tiempoEjecucion);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
 	LimpiarPantalla();
+
+
+
+	Ruta::IntercambioNodos(lstRutaCorta);
 
 
 	/***************************************************************
@@ -335,9 +349,4 @@ void mostrarRuta(Tabla<Tabla<Ruta>> *lstRuta)
 	printf("\ntotal Cantidad Recoger: %d",totalCantidadRecoger);
 	printf("\ntotal Inventario: %d",totalInventario);
 	printf ("\n\nTC: Total Carga \nTCR: Total Cantidad Recoger\nTD: Total Distancia\nTI: Total Inventario");
-}
-void LimpiarPantalla()
-{
-	system("cls");//Creo que Solo Funciona en Windows, para linux es Clear
-	//system("clear");//linux
 }
