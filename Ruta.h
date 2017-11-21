@@ -237,7 +237,7 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 			}
 		}
 
-		if(cantidadRutas>1)//si hay almenos una ruta, que tenga 2 nodos
+		if(cantidadRutas>=1)//si hay almenos una ruta, que tenga 2 nodos
 		{
 			break;
 		}
@@ -320,8 +320,22 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 			//Tabla<Ruta> *rutaDuplicada = new Tabla<Ruta>(*ruta);
 
 			int nodoRuta1 = random(0,ruta->Get(indiceRuta1)->nodos.GetLength()-1);
-			int nodoRuta2 = random(0,ruta->Get(indiceRuta2)->nodos.GetLength()-1);
+			int nodoRuta3;
 
+			do
+			{
+				nodoRuta3=random(0,ruta->Get(indiceRuta1)->nodos.GetLength()-1);
+			}
+			while (nodoRuta1==nodoRuta3);//para no escoger un nodo repetido
+
+			int nodoRuta2 = random(0,ruta->Get(indiceRuta2)->nodos.GetLength()-1);
+			int nodoRuta4;
+			do
+			{
+				nodoRuta4=random(0,ruta->Get(indiceRuta2)->nodos.GetLength()-1);
+			}
+			while (nodoRuta2==nodoRuta4);//para no escoger un nodo repetido
+			
 
 
 			printf("\n*Actual*******************");
@@ -334,6 +348,10 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 
 			ruta->Get(indiceRuta1)->nodos.Set(nodoRuta1,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta2));
 			ruta->Get(indiceRuta2)->nodos.Set(nodoRuta2,nodoPuente);
+
+			nodoPuente=ruta->Get(indiceRuta1)->nodos.Get(nodoRuta3);
+			ruta->Get(indiceRuta1)->nodos.Set(nodoRuta3,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta4));
+			ruta->Get(indiceRuta2)->nodos.Set(nodoRuta4,nodoPuente);
 
 
 			printf("\n*Nueva*******************");
@@ -367,6 +385,10 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 				nodoPuente=ruta->Get(indiceRuta1)->nodos.Get(nodoRuta1);
 				ruta->Get(indiceRuta1)->nodos.Set(nodoRuta1,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta2));
 				ruta->Get(indiceRuta2)->nodos.Set(nodoRuta2,nodoPuente);
+
+				nodoPuente=ruta->Get(indiceRuta1)->nodos.Get(nodoRuta3);
+				ruta->Get(indiceRuta1)->nodos.Set(nodoRuta3,ruta->Get(indiceRuta2)->nodos.Get(nodoRuta4));
+				ruta->Get(indiceRuta2)->nodos.Set(nodoRuta4,nodoPuente);
 			}
 			else
 			{
