@@ -8,17 +8,24 @@
 #include "Ruta.h"
 #include "Win.h"
 
-int random(int inicio, int final);
-
 void mostrarRuta(Tabla<Tabla<Ruta>> *lstRuta);
-
-
 
 int main()
 {
-
 	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
+	int arreglo[5]={1,2,3,4,5};
+
+	//imprimir
+	for(int p=0;p<5;p++)
+	{
+		printf("%d",arreglo[p]);
+	}
+	printf("\n");
+
+	IntercambioNodosEntreRuta(arreglo,4,4);//cuando se llama primera el metodo, cantidad y sizeArray es el tamaño del indice
+	getchar();
+	return 0;
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
 	int distancia[]={0,230,250,320,150,230,452,420,230,320,250,

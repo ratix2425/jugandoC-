@@ -155,7 +155,6 @@ T *Tabla<T>::Get(int indice) {
 	return &*_pT[indice];
 }
 
-
 template <class T>
 void Tabla<T>::Set(int indice, T *obj)
 {
@@ -167,7 +166,6 @@ void Tabla<T>::Set(int indice, T *obj)
 	_pT[indice]  = obj;
 }
 
-
 //retorna la Suma de un metodo en especifico que se incluya como parametro
 template <class T>
 int Tabla<T>::Totalizar(int (T::*metodo)()){
@@ -178,8 +176,6 @@ int Tabla<T>::Totalizar(int (T::*metodo)()){
 	}
 	return suma;
 }
-
-
 
 /*
 template <class T>

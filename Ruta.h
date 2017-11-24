@@ -111,8 +111,6 @@ int Ruta::TotalInventario()
 	return total;
 }
 
-
-
 void Ruta::Imprimir()
 {
 	printf("\nN ruta %d",this->_numeroRuta);
@@ -127,8 +125,6 @@ void Ruta::Imprimir()
 		printf("%d,",this->nodos.Get(i)->NumeroNodo());
 	}
 };
-
-
 
 Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
 {
@@ -413,4 +409,62 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 	}
 	while(segundosEjecucion<=tiempoEjecucionIntercambioNodos);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
 }
+
+//funcion puente para el intercambio
+void cambio(int *x, int *y) { 
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+//forma 1, invertir desde el ultimo indice al primero
+void IntercambioNodosEntreRuta(int *arreglo,int cantidad,int sizeArray)
+{
+	for(int i=1;i<=cantidad;i++)
+	{
+		IntercambioNodosEntreRuta(arreglo,cantidad-1,sizeArray);
+
+		if(i==cantidad)continue;//entra a la funcion intercambio, pero no necesito que realice el cambio, ni imprima valor, (es solo para que haga la llamada recursiva)
+		
+		cambio(&arreglo[sizeArray-i],&arreglo[sizeArray-cantidad]);
+
+		//invertir el array, desde donde se hizo cambio
+		for(int x=cantidad-1;x>1;x--)
+		{
+			cambio(&arreglo[sizeArray-x],&arreglo[sizeArray-(cantidad-x)]);
+		}
+
+
+		//imprimir
+		for(int p=0;p<sizeArray;p++)
+		{
+			printf("%d",arreglo[p]);
+		}
+		printf("\n");
+	}
+}
+
+/*
+//forma 2, invertir desde el primer indice hasta el final
+//mas facil de entender
+void intercambio(int *arreglo,int cantidad,int sizeArray)
+{
+for(int i=1;i<=cantidad;i++)
+{
+intercambio(arreglo,cantidad-1,sizeArray);
+
+if(i==cantidad)continue;//hace el intercambio pero no imprime el mismo valor
+//printf("%d %d\n",i,cantidad);
+cambio(&arreglo[i],&arreglo[cantidad]);
+
+//invertir
+for(int x=cantidad-1;x>1;x--)
+{
+cambio(&arreglo[x],&arreglo[cantidad-x]);
+}
+
+printf("\t%d%d%d%d\n",arreglo[1],arreglo[2],arreglo[3],arreglo[4]);
+}
+}
+*/
 #endif
