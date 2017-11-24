@@ -331,7 +331,7 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 				nodoRuta4=random(0,ruta->Get(indiceRuta2)->nodos.GetLength()-1);
 			}
 			while (nodoRuta2==nodoRuta4);//para no escoger un nodo repetido
-			
+
 
 
 			printf("\n*Actual*******************");
@@ -425,17 +425,20 @@ void IntercambioNodosEntreRuta(int *arreglo,int cantidad,int sizeArray)
 		IntercambioNodosEntreRuta(arreglo,cantidad-1,sizeArray);
 
 		if(i==cantidad)continue;//entra a la funcion intercambio, pero no necesito que realice el cambio, ni imprima valor, (es solo para que haga la llamada recursiva)
-		
+
 		cambio(&arreglo[sizeArray-i],&arreglo[sizeArray-cantidad]);
 
 		//invertir el array, desde donde se hizo cambio
-		for(int x=cantidad-1;x>1;x--)
+		int inicio = sizeArray-cantidad+1;
+		int size=sizeArray-inicio;
+		for(int x=0;x<size/2;x++)
 		{
-			cambio(&arreglo[sizeArray-x],&arreglo[sizeArray-(cantidad-x)]);
+			cambio(&arreglo[inicio+x],&arreglo[inicio+size-1-x]);
 		}
 
 
 		//imprimir
+		//esto toca quitarlo, no demorar la funcion mostrando valores en pantalla
 		for(int p=0;p<sizeArray;p++)
 		{
 			printf("%d",arreglo[p]);

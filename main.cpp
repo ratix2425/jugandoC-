@@ -14,16 +14,17 @@ int main()
 {
 	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
-	int arreglo[5]={1,2,3,4,5};
+	int arreglo[10]={1,2,3,4,5,6,7,8,9,10};
 
 	//imprimir
-	for(int p=0;p<5;p++)
+	for(int p=0;p<10;p++)
 	{
 		printf("%d",arreglo[p]);
 	}
 	printf("\n");
 
-	IntercambioNodosEntreRuta(arreglo,4,4);//cuando se llama primera el metodo, cantidad y sizeArray es el tamaño del indice
+	IntercambioNodosEntreRuta(arreglo,5,5);//cuando se llama primera el metodo, cantidad y sizeArray es el tamaño del indice
+
 	getchar();
 	return 0;
 
