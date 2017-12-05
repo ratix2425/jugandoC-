@@ -258,7 +258,6 @@ int main()
 	LimpiarPantalla();
 
 
-
 	Ruta::IntercambioNodos(lstRutaCorta);
 
 	Ruta::IntercambioNodosEntreRutaDistanciaCorta(lstRutaCorta);

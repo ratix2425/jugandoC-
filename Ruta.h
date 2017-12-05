@@ -141,6 +141,15 @@ void Ruta::Imprimir()
 
 void Ruta::CalcularDistanciaCorta()
 {
+	Debug("\nInicia Intercambio de Nodos para encontrar la distancia mas Corta");
+
+	printf("\n*Original*******************\n");
+	for(int i=0;i<this->nodos.GetLength();i++)
+	{
+		printf("%d,",this->nodos.Get(i)->NumeroNodo());
+	}
+	Debug("\ntotal Distancia Actual %d",this->TotalDistancia());
+
 	Tabla<Nodo> *tblNodoTmp= new Tabla<Nodo>();
 	tblNodoTmp->Insertar(this->nodos);//objeto encargado de realizar el cambio de orden entre las Nodos
 	this->IntercambioNodosEntreRuta(tblNodoTmp,this->nodos.GetLength());
@@ -375,25 +384,19 @@ void Ruta::IntercambioNodosEntreRuta(Tabla<Nodo> *tblNodoTmp,int cantidad)
 			cambio(tblNodoTmp,inicio+x,inicio+size-1-x);
 		}
 
+
+
 		if(Ruta::TotalDistancia(tblNodoTmp)<this->TotalDistancia())
 		{
-			Notice("\n\nRealiza Intercambio de Nodos, para evaluar la distancia mas Corta");
-			printf("\n*Actual*******************\n");
-			for(int i=0;i<this->nodos.GetLength();i++)
-			{
-				printf("%d,",this->nodos.Get(i)->NumeroNodo());
-			}
-			Debug("\ntotal Distancia Actual %d",this->TotalDistancia());
-
 			this->nodos.Clear();
 			this->nodos.Insertar(*tblNodoTmp);
 
-			printf("\n*Nuevo*******************\n");
+			Notice("\n*Nuevo*******************\n");
 			for(int i=0;i<this->nodos.GetLength();i++)
 			{
-				printf("%d,",this->nodos.Get(i)->NumeroNodo());
+				Notice("%d,",this->nodos.Get(i)->NumeroNodo());
 			}
-			Debug("\ntotal Distancia Nueva %d",this->TotalDistancia());
+			Notice("\ntotal Distancia Nueva %d",this->TotalDistancia());
 
 		}
 	}
