@@ -14,19 +14,6 @@ int main()
 {
 	srand (time(NULL));//la semilla para generar los números aleatorios cada vez que se ingresa al random. esta funcion solo se llamana una sola vez
 
-	int arreglo[10]={1,2,3,4,5,6,7,8,9,10};
-
-	//imprimir
-	for(int p=0;p<10;p++)
-	{
-		printf("%d",arreglo[p]);
-	}
-	printf("\n");
-
-	IntercambioNodosEntreRuta(arreglo,5,5);//cuando se llama primera el metodo, cantidad y sizeArray es el tamaño del indice
-
-	getchar();
-	return 0;
 
 	//datos para llenar la tabla distancia  (nodo x nodo)
 	int distancia[]={0,230,250,320,150,230,452,420,230,320,250,
@@ -274,6 +261,7 @@ int main()
 
 	Ruta::IntercambioNodos(lstRutaCorta);
 
+	Ruta::IntercambioNodosEntreRutaDistanciaCorta(lstRutaCorta);
 
 	/***************************************************************
 	*
@@ -285,7 +273,6 @@ int main()
 	printf("\nN de Nodos : %d\n", numeroNodos);
 	printf("\nN de Dias : %d\n", numeroDias);
 	printf("\nMaximo Nodos por Rutas : %d\n", maxNodoRuta);
-
 
 	/*
 	//imprimir

@@ -14,6 +14,12 @@ private:
 
 	int _numeroRuta;
 
+	//funcion encargada de evaluar la distancia mas corta entre un grupo de nodos
+	void IntercambioNodosEntreRuta(Tabla<Nodo> *tblNodoTmp,int cantidad);
+
+	//encargado de cambiar un nodo, por otro, dentro del mismo listado
+	void cambio(Tabla<Nodo> *arreglo,int x, int y);
+
 public:
 
 	Ruta(int numeroRuta, int nDia);
@@ -35,6 +41,8 @@ public:
 
 	int TotalDistancia();
 
+	static int Ruta::TotalDistancia(Tabla<Nodo> *tblNodo);
+
 	int TotalInventario();
 
 	void Imprimir();
@@ -42,6 +50,11 @@ public:
 	static Tabla<Tabla<Ruta>> *GenerarRuta(Tabla<Nodo> &lstNodo);
 
 	static void IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta);
+
+	//evaluar la menor distancia entre cada ruta
+	static void IntercambioNodosEntreRutaDistanciaCorta(Tabla<Tabla<Ruta>> *lstRuta);
+
+	void CalcularDistanciaCorta();
 };
 
 Ruta::Ruta(int numeroRuta, int nDia)
@@ -126,79 +139,13 @@ void Ruta::Imprimir()
 	}
 };
 
-Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
+void Ruta::CalcularDistanciaCorta()
 {
-	Tabla<Tabla<Ruta>> *lstRutatmpGeneral = new Tabla<Tabla<Ruta>>();//un listado de tabla de rutas, por dias
-	Tabla<Ruta> *lstRutatmp;//puntero temporal donde se va a almacenar todas las rutas por dias
-
-	for(int dia =0;dia<numeroDias;dia++)//recorrer todos los dias
-	{
-		lstRutatmp = new Tabla<Ruta>();//puntero temporal donde se va a almacenar todas las rutas
-
-		lstRutatmpGeneral->Insertar(lstRutatmp);
-		Tabla<Nodo> lstTmpNodo;
-		lstTmpNodo.Insertar(lstNodo);//guardamos todos los nodos en un listado temporal,para ir sacando de este listado todos los nodos que se van asignando a una ruta
-
-		int numeroRuta=0;
-
-		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
-		lstRutatmp->Insertar(rut);//insertar la ruta al listado de Rutas temporal
-		do
-		{
-			int indice = random(0,lstTmpNodo.GetLength()-1);//obtener un nodo al azar
-
-			//si el nodo no tiene inventario para este dia, no se agrega a ninguna ruta
-			if(lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=0)
-			{
-				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
-				continue;
-			}
-			if(
-				rut->TotalCantidadRecoger()+lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=capacidadVehiculo//si la total cantidadRecoger de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
-				&& rut->nodos.GetLength()<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
-				)
-			{
-				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
-				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
-			}
-
-			else
-			{
-				//si hay un nodo que puede agregar a alguna ruta existente, se adiciona y no se crea nueva ruta
-				bool existe = false;
-
-				for (int i = 0; i < lstRutatmp->GetLength(); i++)
-				{
-					if(lstRutatmp->Get(i)->nodos.GetLength()<maxNodoRuta && lstRutatmp->Get(i)->GetDia()==dia)//OJO: para poder agregar el nodo a la ruta, deben ser del mismo dia
-					{
-						if(lstRutatmp->Get(i)->TotalCantidadRecoger()+ lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=capacidadVehiculo)
-						{
-							lstRutatmp->Get(i)->nodos.Insertar(lstTmpNodo.Get(indice));
-							lstTmpNodo.Remover(lstTmpNodo.Get(indice));
-							existe = true;
-							break;
-						}
-					}
-				}
-
-
-				if(!existe)//si no se encontro una ruta, para agregarlo, se adiciona una nueva
-				{
-					//creamos nueva Ruta
-					rut = new Ruta(++numeroRuta,dia);
-					//insertar al listado de rutas
-					lstRutatmp->Insertar(rut);
-					rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
-					lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
-				}
-			}
-
-		}
-		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
-
-	}
-
-	return lstRutatmpGeneral;
+	Tabla<Nodo> *tblNodoTmp= new Tabla<Nodo>();
+	tblNodoTmp->Insertar(this->nodos);//objeto encargado de realizar el cambio de orden entre las Nodos
+	this->IntercambioNodosEntreRuta(tblNodoTmp,this->nodos.GetLength());
+	tblNodoTmp->Clear();//limpiar puntero
+	delete tblNodoTmp;//Eliminar Objeto
 }
 
 void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
@@ -410,64 +357,164 @@ void Ruta::IntercambioNodos(Tabla<Tabla<Ruta>> *lstRuta)
 	while(segundosEjecucion<=tiempoEjecucionIntercambioNodos);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
 }
 
-//funcion puente para el intercambio
-void cambio(int *x, int *y) { 
-	int temp = *x;
-	*x = *y;
-	*y = temp;
-}
-
-//forma 1, invertir desde el ultimo indice al primero
-void IntercambioNodosEntreRuta(int *arreglo,int cantidad,int sizeArray)
+void Ruta::IntercambioNodosEntreRuta(Tabla<Nodo> *tblNodoTmp,int cantidad)
 {
 	for(int i=1;i<=cantidad;i++)
 	{
-		IntercambioNodosEntreRuta(arreglo,cantidad-1,sizeArray);
+		Ruta::IntercambioNodosEntreRuta(tblNodoTmp,cantidad-1);
 
 		if(i==cantidad)continue;//entra a la funcion intercambio, pero no necesito que realice el cambio, ni imprima valor, (es solo para que haga la llamada recursiva)
 
-		cambio(&arreglo[sizeArray-i],&arreglo[sizeArray-cantidad]);
+		cambio(tblNodoTmp,tblNodoTmp->GetLength()-i,tblNodoTmp->GetLength()-cantidad);
 
 		//invertir el array, desde donde se hizo cambio
-		int inicio = sizeArray-cantidad+1;
-		int size=sizeArray-inicio;
+		int inicio = tblNodoTmp->GetLength()-cantidad+1;
+		int size=tblNodoTmp->GetLength()-inicio;
 		for(int x=0;x<size/2;x++)
 		{
-			cambio(&arreglo[inicio+x],&arreglo[inicio+size-1-x]);
+			cambio(tblNodoTmp,inicio+x,inicio+size-1-x);
 		}
 
-
-		//imprimir
-		//esto toca quitarlo, no demorar la funcion mostrando valores en pantalla
-		for(int p=0;p<sizeArray;p++)
+		if(Ruta::TotalDistancia(tblNodoTmp)<this->TotalDistancia())
 		{
-			printf("%d",arreglo[p]);
+			Notice("\n\nRealiza Intercambio de Nodos, para evaluar la distancia mas Corta");
+			printf("\n*Actual*******************\n");
+			for(int i=0;i<this->nodos.GetLength();i++)
+			{
+				printf("%d,",this->nodos.Get(i)->NumeroNodo());
+			}
+			Debug("\ntotal Distancia Actual %d",this->TotalDistancia());
+
+			this->nodos.Clear();
+			this->nodos.Insertar(*tblNodoTmp);
+
+			printf("\n*Nuevo*******************\n");
+			for(int i=0;i<this->nodos.GetLength();i++)
+			{
+				printf("%d,",this->nodos.Get(i)->NumeroNodo());
+			}
+			Debug("\ntotal Distancia Nueva %d",this->TotalDistancia());
+
 		}
-		printf("\n");
 	}
 }
 
-/*
-//forma 2, invertir desde el primer indice hasta el final
-//mas facil de entender
-void intercambio(int *arreglo,int cantidad,int sizeArray)
-{
-for(int i=1;i<=cantidad;i++)
-{
-intercambio(arreglo,cantidad-1,sizeArray);
+//funcion puente para el intercambio
+void Ruta::cambio(Tabla<Nodo> *arreglo,int x, int y) { 
+	Nodo *temp = arreglo->Get(x);
 
-if(i==cantidad)continue;//hace el intercambio pero no imprime el mismo valor
-//printf("%d %d\n",i,cantidad);
-cambio(&arreglo[i],&arreglo[cantidad]);
-
-//invertir
-for(int x=cantidad-1;x>1;x--)
-{
-cambio(&arreglo[x],&arreglo[cantidad-x]);
+	arreglo->Set(x,arreglo->Get(y));
+	arreglo->Set(y,temp);
 }
 
-printf("\t%d%d%d%d\n",arreglo[1],arreglo[2],arreglo[3],arreglo[4]);
+//Funciones Estaticas
+Tabla<Tabla<Ruta>> *Ruta::GenerarRuta(Tabla<Nodo> &lstNodo)
+{
+	Tabla<Tabla<Ruta>> *lstRutatmpGeneral = new Tabla<Tabla<Ruta>>();//un listado de tabla de rutas, por dias
+	Tabla<Ruta> *lstRutatmp;//puntero temporal donde se va a almacenar todas las rutas por dias
+
+	for(int dia =0;dia<numeroDias;dia++)//recorrer todos los dias
+	{
+		lstRutatmp = new Tabla<Ruta>();//puntero temporal donde se va a almacenar todas las rutas
+
+		lstRutatmpGeneral->Insertar(lstRutatmp);
+		Tabla<Nodo> lstTmpNodo;
+		lstTmpNodo.Insertar(lstNodo);//guardamos todos los nodos en un listado temporal,para ir sacando de este listado todos los nodos que se van asignando a una ruta
+
+		int numeroRuta=0;
+
+		Ruta *rut= new Ruta(++numeroRuta,dia);//insertar primera ruta
+		lstRutatmp->Insertar(rut);//insertar la ruta al listado de Rutas temporal
+		do
+		{
+			int indice = random(0,lstTmpNodo.GetLength()-1);//obtener un nodo al azar
+
+			//si el nodo no tiene inventario para este dia, no se agrega a ninguna ruta
+			if(lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=0)
+			{
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+				continue;
+			}
+			if(
+				rut->TotalCantidadRecoger()+lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=capacidadVehiculo//si la total cantidadRecoger de la ruta + la demanda del nodo, no supera la capacidad del vehiculo
+				&& rut->nodos.GetLength()<maxNodoRuta //la cantidad de nodos por ruta no supere maxNodoRuta
+				)
+			{
+				rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+				lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+			}
+
+			else
+			{
+				//si hay un nodo que puede agregar a alguna ruta existente, se adiciona y no se crea nueva ruta
+				bool existe = false;
+
+				for (int i = 0; i < lstRutatmp->GetLength(); i++)
+				{
+					if(lstRutatmp->Get(i)->nodos.GetLength()<maxNodoRuta && lstRutatmp->Get(i)->GetDia()==dia)//OJO: para poder agregar el nodo a la ruta, deben ser del mismo dia
+					{
+						if(lstRutatmp->Get(i)->TotalCantidadRecoger()+ lstTmpNodo.Get(indice)->GetCantidadRecoger(dia)<=capacidadVehiculo)
+						{
+							lstRutatmp->Get(i)->nodos.Insertar(lstTmpNodo.Get(indice));
+							lstTmpNodo.Remover(lstTmpNodo.Get(indice));
+							existe = true;
+							break;
+						}
+					}
+				}
+
+
+				if(!existe)//si no se encontro una ruta, para agregarlo, se adiciona una nueva
+				{
+					//creamos nueva Ruta
+					rut = new Ruta(++numeroRuta,dia);
+					//insertar al listado de rutas
+					lstRutatmp->Insertar(rut);
+					rut->nodos.Insertar(lstTmpNodo.Get(indice));//insertamos a la ruta
+					lstTmpNodo.Remover(lstTmpNodo.Get(indice));//quitamos de la lista
+				}
+			}
+
+		}
+		while(lstTmpNodo.GetLength()>0);//se debe repetir, hasta que no queden nodos sin rutas
+
+	}
+
+	return lstRutatmpGeneral;
 }
+
+void Ruta::IntercambioNodosEntreRutaDistanciaCorta(Tabla<Tabla<Ruta>> *lstRuta)
+{
+	//recorrer todos los dias
+	for(int i=0;i<lstRuta->GetLength();i++)
+	{
+		Tabla<Ruta> *tblRuta = lstRuta->Get(i);
+		//recorrer cada ruta
+		for(int r=0;r<tblRuta->GetLength();r++)
+		{
+			Ruta *ruta = tblRuta->Get(r);
+			//cada ruta, calcular distancia Corta
+			ruta->CalcularDistanciaCorta();
+		}
+	}
 }
-*/
+int Ruta::TotalDistancia(Tabla<Nodo> *tblNodo)
+{
+	int total = 0;
+
+	for(int i=0;i<tblNodo->GetLength();i++)
+	{
+		if(i==tblNodo->GetLength()-1)//si es el ultimo nodo, se calcula la distancia que tiene ese nodo, con el indice 0, o nodo principal
+		{
+			total = total+tblNodo->Get(i)->GetDistancia(0);
+		}
+		else
+		{
+			total = total+tblNodo->Get(i)->GetDistancia(tblNodo->Get(i+1)->NumeroNodo());//calcula la distancia del nodo actual, con el nodo siguiente de la lista
+		}
+	}
+	return total;
+}
+
+
 #endif
