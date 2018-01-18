@@ -54,6 +54,8 @@ public:
 	//evaluar la menor distancia entre cada ruta
 	static void IntercambioNodosEntreRutaDistanciaCorta(Tabla<Tabla<Ruta>> *lstRuta);
 
+	static void IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta);
+
 	void CalcularDistanciaCorta();
 };
 
@@ -500,6 +502,74 @@ void Ruta::IntercambioNodosEntreRutaDistanciaCorta(Tabla<Tabla<Ruta>> *lstRuta)
 			ruta->CalcularDistanciaCorta();
 		}
 	}
+}
+
+void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
+{
+	Debug("\n\n\nInicia Intercambio de Nodos Extremos por Ruta");
+
+	//recorrer todos los dias
+	for(int i=0;i<lstRuta->GetLength();i++)
+	{
+		Tabla<Ruta> *tblRuta = lstRuta->Get(i);
+		//recorrer cada ruta
+		for(int r=0;r<tblRuta->GetLength()-1;r++)
+		{
+			for(int r2=r+1;r2<tblRuta->GetLength();r2++)
+			{
+				Ruta *ruta1 = tblRuta->Get(r);
+				Ruta *ruta2 = tblRuta->Get(r2);
+				//calcular distancia temporalmente
+				//ruta1
+				int distancia1 = ruta1->TotalDistancia();
+				//ruta2
+				int distancia2 = ruta2->TotalDistancia();
+
+
+				Nodo *nodoTmp;
+
+				//realizar intercambio de nodos extremos
+				//intercambia nodos de extremo inicial
+				
+				nodoTmp =ruta1->nodos.Get(0);
+				ruta1->nodos.Set(0,ruta2->nodos.Get(0));
+				ruta2->nodos.Set(0,nodoTmp);
+
+				//intercambia nodos de extremo final
+				nodoTmp =ruta1->nodos.Get(ruta1->nodos.GetLength()-1);
+				ruta1->nodos.Set(ruta1->nodos.GetLength()-1,ruta2->nodos.Get(ruta2->nodos.GetLength()-1));
+				ruta2->nodos.Set(ruta2->nodos.GetLength()-1,nodoTmp);
+
+				//evaluar las distancia nuevas
+				//ruta1
+				int distancia3 = ruta1->TotalDistancia();
+				//ruta2
+				int distancia4 = ruta2->TotalDistancia();
+
+				//si la suma de la distancia es mayor o igual, se vuelven a invertir los nodos, para dejarlo como estaban
+				if(distancia1+distancia2<=distancia3+distancia4)
+				{
+					//realizar intercambio de nodos extremos
+					//intercambia nodos de extremo inicial
+					nodoTmp =ruta1->nodos.Get(0);
+					ruta1->nodos.Set(0,ruta2->nodos.Get(0));
+					ruta2->nodos.Set(0,nodoTmp);
+
+					//intercambia nodos de extremo final
+					nodoTmp =ruta1->nodos.Get(ruta1->nodos.GetLength()-1);
+					ruta1->nodos.Set(ruta1->nodos.GetLength()-1,ruta2->nodos.Get(ruta2->nodos.GetLength()-1));
+					ruta2->nodos.Set(ruta2->nodos.GetLength()-1,nodoTmp);
+				}
+				else
+				{
+					Notice("\n*Intercambiaron Extremos entre nodos %d y %d, distancia %d, distancia Nueva %d*******************\n",r, r2,distancia1+distancia2,distancia3+distancia4);
+				}
+			}
+
+		}
+
+	}
+	return;
 }
 int Ruta::TotalDistancia(Tabla<Nodo> *tblNodo)
 {

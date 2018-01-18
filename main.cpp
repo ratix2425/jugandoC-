@@ -257,10 +257,14 @@ int main()
 	while(segundosEjecucion<=tiempoEjecucion);//realiza el ciclo hasta que llegue al tope de tiempo de ejecucion
 	LimpiarPantalla();
 
-
+	//intercambia nodos al azar entre rutas, si la distancia dismimuye
 	Ruta::IntercambioNodos(lstRutaCorta);
 
+	//Intercambian los nodos entre cada ruta, y los organiza de tal forma que la distancia sea la mas corta
 	Ruta::IntercambioNodosEntreRutaDistanciaCorta(lstRutaCorta);
+
+	//intercambia nodos de la esquina entre rutas, si la distancia disminuye
+	Ruta::IntercambioNodosExtremosRuta(lstRutaCorta);
 
 	/***************************************************************
 	*
