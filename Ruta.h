@@ -511,6 +511,8 @@ void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
 	//recorrer todos los dias
 	for(int i=0;i<lstRuta->GetLength();i++)
 	{
+		Debug("\nDia: %d", i+1);
+
 		Tabla<Ruta> *tblRuta = lstRuta->Get(i);
 		//recorrer cada ruta
 		for(int r=0;r<tblRuta->GetLength()-1;r++)
@@ -530,7 +532,7 @@ void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
 
 				//realizar intercambio de nodos extremos
 				//intercambia nodos de extremo inicial
-				
+
 				nodoTmp =ruta1->nodos.Get(0);
 				ruta1->nodos.Set(0,ruta2->nodos.Get(0));
 				ruta2->nodos.Set(0,nodoTmp);
@@ -562,7 +564,7 @@ void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
 				}
 				else
 				{
-					Notice("\n*Intercambiaron Extremos entre nodos %d y %d, distancia %d, distancia Nueva %d*******************\n",r, r2,distancia1+distancia2,distancia3+distancia4);
+					Notice("\n*Intercambiaron Extremos entre Rutas %d y %d, distancia %d, distancia Nueva %d*******************\n",ruta1->GetRuta(), ruta2->GetRuta(),distancia1+distancia2,distancia3+distancia4);
 				}
 			}
 
