@@ -56,6 +56,8 @@ public:
 
 	static void IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta);
 
+	static void FiltroX(Tabla<Tabla<Ruta>> *lstRuta);
+
 	void CalcularDistanciaCorta();
 };
 
@@ -137,7 +139,7 @@ void Ruta::Imprimir()
 	printf("\tNodos: ");
 	for(int i=0;i<this->nodos.GetLength();i++)
 	{
-		printf("%d,",this->nodos.Get(i)->NumeroNodo());
+		printf("%s,",this->nodos.Get(i)->GetNombre());
 	}
 };
 
@@ -148,7 +150,7 @@ void Ruta::CalcularDistanciaCorta()
 	printf("\n*Original*******************\n");
 	for(int i=0;i<this->nodos.GetLength();i++)
 	{
-		printf("%d,",this->nodos.Get(i)->NumeroNodo());
+		printf("%s,",this->nodos.Get(i)->GetNombre());
 	}
 	Debug("\ntotal Distancia Actual %d",this->TotalDistancia());
 
@@ -564,7 +566,7 @@ void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
 				}
 				else
 				{
-					Notice("\n*Intercambiaron Extremos entre Rutas %d y %d, distancia %d, distancia Nueva %d*******************\n",ruta1->GetRuta(), ruta2->GetRuta(),distancia1+distancia2,distancia3+distancia4);
+					Notice("\n*Intercambiaron Extremos entre Rutas %d y %d, distancia %d, distancia Nueva %d\n",ruta1->GetRuta(), ruta2->GetRuta(),distancia1+distancia2,distancia3+distancia4);
 				}
 			}
 
@@ -573,6 +575,7 @@ void Ruta::IntercambioNodosExtremosRuta(Tabla<Tabla<Ruta>> *lstRuta)
 	}
 	return;
 }
+
 int Ruta::TotalDistancia(Tabla<Nodo> *tblNodo)
 {
 	int total = 0;
@@ -591,5 +594,51 @@ int Ruta::TotalDistancia(Tabla<Nodo> *tblNodo)
 	return total;
 }
 
+void Ruta::FiltroX(Tabla<Tabla<Ruta>> *lstRuta)
+{
+	Debug("\n\n\nInicia Proceso Filtro X");
 
+	//recorrer todos los dias
+	for(int i=0;i<lstRuta->GetLength();i++)
+	{
+		Debug("\nDia: %d", i+1);
+		Tabla<Ruta> *tblRuta = lstRuta->Get(i);
+
+		Tabla<Ruta> *lstRutaTemporal = new Tabla<Ruta>();
+
+		//recorrer cada ruta
+		for(int r=0;r<tblRuta->GetLength()-1;r++)
+		{
+			Ruta *ruta = tblRuta->Get(r);
+			Nodo *nodoMover = ruta->nodos.Get(0);
+			//si tiene mas de un nodo, y el total de la distancia/distancia del primer nodo es mayor a 1, el nodo se separa
+			if(ruta->nodos.GetLength()>1 && ruta->TotalDistancia()/nodoMover->GetDistancia(0)>=1)
+			{
+				Notice("\n*Separa la ruta %d",ruta->GetRuta());
+				Ruta *rutaNueva= new Ruta(0,i);
+				//agregar Nodo Nueva Ruta
+				rutaNueva->nodos.Insertar(nodoMover);
+				//Eliminar Nodo de la ruta Original
+				ruta->nodos.Remover(nodoMover);
+
+				lstRutaTemporal->Insertar(rutaNueva);
+			}
+		}
+
+		//si hay rutas Nuevas para  Insertar
+		if(lstRutaTemporal->GetLength()>1)
+		{
+			//agregar nuevas rutas, si existen en el listado de rutaTemporal
+			tblRuta->Insertar(*lstRutaTemporal);//lstRutaTemporal->Clear();
+			//no se puede destruir el objeto, pendiente revisar por que =(
+			lstRutaTemporal->Clear();//limpia el array
+		}
+		else//Sino se libera el listado el temporal
+		{
+			lstRutaTemporal->Liberar();
+		}
+		delete lstRutaTemporal;//liberar espacio del puntero
+
+	}
+}
 #endif

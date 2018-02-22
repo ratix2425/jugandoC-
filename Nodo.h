@@ -19,9 +19,11 @@ private:
 
 	int *_inventario;
 
+	char *_nombre;
+
 public:
 
-	Nodo(int numeroNodo, int capacidad, int indice,int *demanda,int *distancia, int *inventario);
+	Nodo(int numeroNodo, char *nombre, int capacidad, int indice,int *demanda,int *distancia, int *inventario);
 
 	~Nodo(void);
 
@@ -36,9 +38,12 @@ public:
 	int GetDistancia(int nodo);
 
 	int GetInventario(int nDia);
+
+	char *GetNombre();
+
 };
 
-Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distancia, int *inventario)
+Nodo::Nodo(int numeroNodo, char *nombre, int capacidad, int indice, int *demanda,int *distancia, int *inventario)
 {
 	this->_numeroNodo = numeroNodo;
 	this->_capacidad = capacidad;
@@ -46,6 +51,7 @@ Nodo::Nodo(int numeroNodo, int capacidad, int indice, int *demanda,int *distanci
 	this->_demanda = demanda;
 	this->_distancia = distancia;
 	this->_inventario = inventario;
+	this->_nombre= nombre;
 
 }
 
@@ -58,7 +64,7 @@ Nodo::~Nodo(void)
 void Nodo::Imprimir()
 {
 	printf("******************************************************************\n");
-	printf("Nodo %d\n\tCapacidad %d", this->_numeroNodo, this->_capacidad);
+	printf("Nodo %d: %s\n\tCapacidad %d",this->_numeroNodo, this->_nombre, this->_capacidad);
 
 	//imprimir demanda
 	printf("\n\tdemanda:\n\t");
@@ -148,4 +154,9 @@ int Nodo::GetInventario(int nodo)
 	return this->_inventario[nodo];
 }
 
+char *Nodo::GetNombre()
+{
+
+	return this->_nombre;
+}
 #endif

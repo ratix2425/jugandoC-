@@ -52,12 +52,27 @@ int main()
 		10,
 		10};
 
+	//los nombres de cada nodo no debe superar 20 caracteres de longitud
+	//el tamaño del array es 21, por que se debe almacenar los 20 caracteres del nombre del nodo y el ultimo campo para especificar el fin del array
+	//siempre debe terminar con un \0, para decirle hasta donde termina el string
+	char nombreNodos[numeroNodos][21]=
+	{
+		"Nodo1\0",
+		"Nodo2\0",
+		"Nodo3\0",
+		"Nodo4\0",
+		"Nodo5\0",
+		"Nodo6\0",
+		"Nodo7\0",
+		"Nodo8\0",
+		"Nodo9\0",
+		"Nodo10\0",
+	};
+
 	//Contenedor de los datos
 	ArrayDinamico<int> lstDistancia(numeroNodos+1,numeroNodos+1);//Creamos una matriz distancia de numeroNodos+1  X numeroNodos+1--    mas 1 por que estamos sumando el deposito
 	ArrayDinamico<int> lstDemanda(numeroDias,numeroNodos);//Matriz de demanda 2 x numero de Nodos
 	ArrayDinamico<int> lstCapacidadAlmacenamiento(1,numeroNodos); // matriz de almacenamiento de 1 x numero de Nodos
-
-
 
 
 
@@ -173,7 +188,7 @@ int main()
 		for (int i = 1; i <= numeroNodos; i++)
 		{
 			//i-1 por que el valor del nodo1, esta en el indice 0, del nodo2 esta en el indice 1, nodo3 en indice 2 ...
-			Nodo *nodo =new Nodo(i,lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario->GetListY(i-1));
+			Nodo *nodo =new Nodo(i,nombreNodos[i-1],lstCapacidadAlmacenamiento.Get(0,i-1),i-1, lstDemanda.GetListY(i-1),lstDistancia.GetListY(i),lstInventario->GetListY(i-1));
 			lstNodo->Insertar(nodo);
 		}
 
@@ -265,6 +280,10 @@ int main()
 
 	//intercambia nodos de la esquina entre rutas, si la distancia disminuye
 	Ruta::IntercambioNodosExtremosRuta(lstRutaCorta);
+
+	//Aplicar FiltroX
+	Ruta::FiltroX(lstRutaCorta);
+
 
 	/***************************************************************
 	*
